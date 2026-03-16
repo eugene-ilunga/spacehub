@@ -173,7 +173,7 @@ class HomeController extends Controller
       $queryResult['spaceBannerForegroundImg'] = Basic::query()->pluck('banner_section_foreground_img')->first();
     }
 
-    $queryResult['menuInfos'] = MenuBuilder::where('language_id', $language->id)->first();
+    $queryResult['menuInfos'] = optional(MenuBuilder::where('language_id', $language->id)->first())->menus ?? json_encode([]);
 
    
 

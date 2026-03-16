@@ -36,7 +36,8 @@
                 <div class="collapse navbar-collapse">
                     <ul id="mainMenu" class="navbar-nav mobile-item mx-auto">
                         @php
-                            $menuDatas = json_decode($menuInfos);
+                            $menuPayload = is_string($menuInfos) ? $menuInfos : ($menuInfos->menus ?? '[]');
+                            $menuDatas = json_decode($menuPayload) ?? [];
                             $shop_status = $basicInfo->shop_status ?? 1;
                         @endphp
                         @foreach ($menuDatas as $menuData)
@@ -50,12 +51,12 @@
                             @if (!property_exists($menuData, 'children'))
                                 <li class="nav-item">
                                     <a class="nav-link {{ url()->current() == $href ? 'active' : '' }}"
-                                        href="{{ $href }}">{{ $menuData->text }}</a>
+                                        href="{{ $href }}">{{ __($menuData->text) }}</a>
                                 </li>
                             @else
                                 <li class="nav-item">
                                     <a class="nav-link toggle {{ url()->current() == $href ? 'active' : '' }}"
-                                        href="{{  $href === '#' ? 'javascript:void(0)' : $href }}">{{ $menuData->text }}<i
+                                        href="{{  $href === '#' ? 'javascript:void(0)' : $href }}">{{ __($menuData->text) }}<i
                                             class="fal fa-plus"></i></a>
                                     <ul class="menu-dropdown">
                                         @php $childMenuDatas = $menuData->children; @endphp
@@ -64,7 +65,7 @@
                                             @php $child_href = get_href($childMenuData); @endphp
                                             <li class="nav-item">
                                                 <a class="nav-link {{ url()->current() == $child_href ? 'active' : '' }}"
-                                                    href="{{ $child_href }}">{{ $childMenuData->text }}</a>
+                                                    href="{{ $child_href }}">{{ __($childMenuData->text) }}</a>
                                             </li>
                                         @endforeach
                                     </ul>
