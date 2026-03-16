@@ -4,7 +4,7 @@
     <div class="row align-items-xl-center g-0 product-default product-column border radius-md mb-25">
         <figure class="col-xl-6 product_img radius-sm">
             <a href="{{ route('space.details', ['slug' => $space->slug, 'id' => $space->space_id]) }}" target="_self"
-                title="Link" class="lazy-container ratio ratio-5-4 radius-sm">
+                title="{{ __('Link') }}" class="lazy-container ratio ratio-5-4 radius-sm">
                 <img class="lazyload" src="{{ asset('assets/img/spaces/thumbnail-images/' . $space->image) }}"
                     data-src="{{ asset('assets/img/spaces/thumbnail-images/' . $space->image) }}"
                     alt="{{ @$space->title }}">
@@ -30,7 +30,7 @@
             </form>
             <div class="hover-show">
                 <a href="{{ route('space.details', ['slug' => $space->slug, 'id' => $space->space_id]) }}"
-                    class="btn btn-md btn-primary radius-sm" title="More Details"
+                    class="btn btn-md btn-primary radius-sm" title="{{ __('More Details') }}"
                     target="_self">{{ __('More Details') }}</a>
             </div>
         </figure>

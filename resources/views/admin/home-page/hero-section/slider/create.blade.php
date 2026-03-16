@@ -44,14 +44,14 @@
             <div class="col-md-6">
               <div class="form-group">
                 <label for="">{{ __('Title') }}</label>
-                <input type="text" class="form-control" name="title" placeholder="Enter Title">
+                <input type="text" class="form-control" name="title" placeholder="{{ __('Enter Title') }}">
               </div>
             </div>
           </div>
 
           <div class="form-group">
             <label for="">{{ __('Text') }}</label>
-            <textarea class="form-control" name="text" rows="5" placeholder="Enter Text"></textarea>
+            <textarea class="form-control" name="text" rows="5" placeholder="{{ __('Enter Text') }}"></textarea>
           </div>
         </form>
       </div>

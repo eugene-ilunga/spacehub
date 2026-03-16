@@ -85,13 +85,13 @@
                     <div class="form-group">
                         <label for="">{{ __('Category Name') . '*' }}</label>
                         <input type="text" id="in_name" class="form-control" name="name"
-                            placeholder="Enter Name">
+                            placeholder="{{ __('Enter Name') }}">
                         <p id="editErr_name" class="mt-2 mb-0 text-danger em"></p>
                     </div>
                     <div class="form-group">
                         <label for="">{{ __('Category Description') }}</label>
                         <input type="text" id="in_category_description" class="form-control"
-                            name="category_description" placeholder="Enter category description">
+                            name="category_description" placeholder="{{ __('Enter category description') }}">
                         <p id="editErr_category_description" class="mt-2 mb-0 text-danger em"></p>
                     </div>
 

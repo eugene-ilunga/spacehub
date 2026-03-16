@@ -44,7 +44,7 @@
                                             <label>{{ __('Email') . '*' }}</label>
                                             <input type="email" class="form-control"
                                                    value="{{ Auth::guard('seller')->user()->email }}"
-                                                   name="email" placeholder="Enter Email">
+                                                   name="email" placeholder="{{ __('Enter Email') }}">
                                         </div>
                                         @error('email')
                                         <p class="text-danger">{{ $message }}</p>

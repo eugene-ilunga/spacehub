@@ -173,7 +173,7 @@
                                             <div class="form-group">
                                                 <label for="text">{{ __('Text') }}</label>
                                                 <input type="text" class="form-control item-menu" name="text"
-                                                    placeholder="Enter Menu Name">
+                                                    placeholder="{{ __('Enter Menu Name') }}">
                                             </div>
 
                                             <div class="form-group">

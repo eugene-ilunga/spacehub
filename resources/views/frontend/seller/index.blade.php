@@ -93,7 +93,7 @@
                                     <h6 class="title mb-1">
                                         <a href="{{ route('frontend.seller.details', ['username' => $admin->username, 'admin' => true]) }}"
                                             target="_self"
-                                            title="Vendor">{{ strlen($admin->username) > 20 ? mb_substr($admin->username, 0, 20, 'UTF-8') . '..' : ucfirst($admin->username) }}</a>
+                                            title="{{ __('Vendor') }}">{{ strlen($admin->username) > 20 ? mb_substr($admin->username, 0, 20, 'UTF-8') . '..' : ucfirst($admin->username) }}</a>
                                     </h6>
                                     @php
                                         $space_count = \App\Models\Space::where([
@@ -166,7 +166,7 @@
                                         <h6 class="title mb-1">
                                             <a href="{{ route('frontend.seller.details', ['username' => $seller->username]) }}"
                                                 target="_self"
-                                                title="Vendor">{{ strlen($seller->username) > 20 ? mb_substr($seller->username, 0, 20, 'UTF-8') . '..' : ucfirst($seller->username) }}</a>
+                                                title="{{ __('Vendor') }}">{{ strlen($seller->username) > 20 ? mb_substr($seller->username, 0, 20, 'UTF-8') . '..' : ucfirst($seller->username) }}</a>
                                         </h6>
                                         @php
                                             $spaceIds = \App\Models\Package::getSpaceIdsBySeller($seller->seller_id);

@@ -77,7 +77,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Serial Number'). '*' }}</label>
                                 <input type="number" class="form-control" name="serial_number"
-                                    placeholder="Enter Serial Number" id="in_serial_number">
+                                    placeholder="{{ __('Enter Serial Number') }}" id="in_serial_number">
                                 <p id="editErr_serial_number" class="mt-2 mb-0 text-danger em"></p>
                                 <p class="text-warning mt-2 mb-0">
                                     <small>{{ __('Coupons with higher serial numbers will appear later in the list') . '.' }}</small>

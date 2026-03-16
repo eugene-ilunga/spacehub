@@ -176,7 +176,7 @@
                                                 id="link-input">
                                                 <label>{{ __('Link') }}</label>
                                                 <input type="url" class="form-control" name="link"
-                                                    placeholder="Enter Download Link" value="{{ $product->link }}">
+                                                    placeholder="{{ __('Enter Download Link') }}" value="{{ $product->link }}">
                                             </div>
                                         </div>
                                     @endif
@@ -186,7 +186,7 @@
                                             <div class="form-group">
                                                 <label>{{ __('Stock') . '*' }}</label>
                                                 <input type="number" class="form-control" name="stock"
-                                                    placeholder="Enter Product Stock" value="{{ $product->stock }}">
+                                                    placeholder="{{ __('Enter Product Stock') }}" value="{{ $product->stock }}">
                                             </div>
                                         </div>
                                     @endif
@@ -197,7 +197,7 @@
                                         <div class="form-group">
                                             <label>{{ __('Current Price') . '* (' . $currencyText . ')' }}</label>
                                             <input type="number" step="0.01" class="form-control"
-                                                name="current_price" placeholder="Enter Product Current Price"
+                                                name="current_price" placeholder="{{ __('Enter Product Current Price') }}"
                                                 value="{{ $product->current_price }}">
                                         </div>
                                     </div>
@@ -206,7 +206,7 @@
                                         <div class="form-group">
                                             <label>{{ __('Previous Price') . ' (' . $currencyText . ')' }}</label>
                                             <input type="number" step="0.01" class="form-control"
-                                                name="previous_price" placeholder="Enter Product Previous Price"
+                                                name="previous_price" placeholder="{{ __('Enter Product Previous Price') }}"
                                                 value="{{ $product->previous_price }}">
                                         </div>
                                     </div>
@@ -241,7 +241,7 @@
                                                                 <label>{{ __('Title') . '*' }}</label>
                                                                 <input type="text" class="form-control"
                                                                     name="{{ $language->code }}_title"
-                                                                    placeholder="Enter Title"
+                                                                    placeholder="{{ __('Enter Title') }}"
                                                                     value="{{ is_null($productData) ? '' : $productData->title }}">
                                                             </div>
                                                         </div>
@@ -278,7 +278,7 @@
                                                             <div
                                                                 class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
                                                                 <label>{{ __('Summary') . '*' }}</label>
-                                                                <textarea class="form-control" name="{{ $language->code }}_summary" placeholder="Enter Summary" rows="4">{{ is_null($productData) ? '' : $productData->summary }}</textarea>
+                                                                <textarea class="form-control" name="{{ $language->code }}_summary" placeholder="{{ __('Enter Summary') }}" rows="4">{{ is_null($productData) ? '' : $productData->summary }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>

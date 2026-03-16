@@ -25,7 +25,7 @@
                                         <div class="card_top">
                                             <div class="card_img p-20">
                                                 <a href="{{ route('blog.post_details', ['slug' => $post->slug, 'id' => $post->id]) }}"
-                                                    target="_self" title="Link"
+                                                    target="_self" title="{{ __('Link') }}"
                                                     class="lazy-container radius-sm ratio ratio-2-3">
                                                     <img class="lazyload"
                                                         src="{{ asset('assets/img/posts/' . $post->image) }}"
@@ -37,7 +37,7 @@
                                         <div class="card_content px-20">
                                             <h4 class="card_title lc-2 mb-15">
                                                 <a href="{{ route('blog.post_details', ['slug' => $post->slug, 'id' => $post->id]) }}"
-                                                    target="_self" title="Link">
+                                                    target="_self" title="{{ __('Link') }}">
                                                     {{ strlen($post->title) > 45 ? mb_substr($post->title, 0, 45, 'UTF-8') . '...' : $post->title }}
                                                 </a>
                                             </h4>

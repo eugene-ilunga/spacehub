@@ -444,7 +444,7 @@
                                         <div class="form-group mb-30">
                                             <label>{{ __('Card Number') . '*' }}</label>
                                             <input type="text" class="form-control" id="cardNumber"
-                                                autocomplete="off" placeholder="Enter Card Number">
+                                                autocomplete="off" placeholder="{{ __('Enter Card Number') }}">
                                         </div>
                                     </div>
 
@@ -452,7 +452,7 @@
                                         <div class="form-group mb-30">
                                             <label>{{ __('Card Code') . '*' }}</label>
                                             <input type="text" class="form-control" id="cardCode" autocomplete="off"
-                                                placeholder="Enter Card Code">
+                                                placeholder="{{ __('Enter Card Code') }}">
                                         </div>
                                     </div>
 
@@ -460,7 +460,7 @@
                                         <div class="form-group mb-30">
                                             <label>{{ __('Expiry Month') . '*' }}</label>
                                             <input type="text" class="form-control" id="expMonth"
-                                                placeholder="Enter Expiry Month">
+                                                placeholder="{{ __('Enter Expiry Month') }}">
                                         </div>
                                     </div>
 
@@ -468,7 +468,7 @@
                                         <div class="form-group mb-30">
                                             <label>{{ __('Expiry Year') . '*' }}</label>
                                             <input type="text" class="form-control" id="expYear"
-                                                placeholder="Enter Expiry Year">
+                                                placeholder="{{ __('Enter Expiry Year') }}">
                                         </div>
                                     </div>
                                     <input type="hidden" name="opaqueDataValue" id="opaqueDataValue">

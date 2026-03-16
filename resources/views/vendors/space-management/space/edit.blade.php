@@ -403,7 +403,7 @@
                                                                 <label>{{ __('Title') . '*' }}</label>
                                                                 <input type="text" class="form-control"
                                                                     name="{{ $language->code }}_title"
-                                                                    placeholder="Enter Space Title"
+                                                                    placeholder="{{ __('Enter Space Title') }}"
                                                                     value="{{ $language->serviceData->title ?? '' }}">
                                                             </div>
                                                         </div>
@@ -748,7 +748,7 @@
                                                                 class="form-group {{ $language->direction == 1 ? 'rtl text-right' : '' }}">
                                                                 <label>{{ __('Description') . '*' }}</label>
                                                                 <textarea id="descriptionTmce{{ $language->id }}" class="form-control summernote"
-                                                                    name="{{ $language->code }}_description" placeholder="Enter Space Description" data-height="300">{{ $language->serviceData->description ?? '' }}</textarea>
+                                                                    name="{{ $language->code }}_description" placeholder="{{ __('Enter Space Description') }}" data-height="300">{{ $language->serviceData->description ?? '' }}</textarea>
                                                             </div>
                                                         </div>
                                                     </div>

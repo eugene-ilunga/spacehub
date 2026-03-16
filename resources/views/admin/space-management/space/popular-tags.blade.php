@@ -71,7 +71,7 @@
                                 <div class="form-group">
                                     <label for="">{{ __('Popular Tags **') }}</label>
                                     <input type="text" class="form-control" name="popular_tags"
-                                        value="{{ $data->popular_tags }}" data-role="tagsinput" placeholder="Popular Tags">
+                                        value="{{ $data->popular_tags }}" data-role="tagsinput" placeholder="{{ __('Popular Tags') }}">
                                     <p id="err_popular_tags" class="mb-0 text-danger em"></p>
                                 </div>
                             </form>

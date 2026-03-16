@@ -138,7 +138,7 @@
                                                 <div class="card_content_wrapper">
                                                     <div class="card_icon bg-light">
                                                         <a href="{{ route('space.index', ['search_from_home' => 'home', 'category' => $category->slug]) }}"
-                                                            title="Link" target="_self">
+                                                            title="{{ __('Link') }}" target="_self">
                                                             <img class="lazyload"
                                                                 src="{{ asset('./assets/img/space-categories/' . $category->icon_image) }}"
                                                                 data-src="{{ asset('./assets/img/space-categories/' . $category->icon_image) }}"

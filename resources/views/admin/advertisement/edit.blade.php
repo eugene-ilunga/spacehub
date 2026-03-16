@@ -56,13 +56,13 @@
 
                     <div class="form-group d-none" id="edit-url-input">
                         <label for="">{{ __('Redirect URL') . '*' }}</label>
-                        <input type="url" class="form-control" name="url" placeholder="Enter Redirect URL" id="in_url">
+                        <input type="url" class="form-control" name="url" placeholder="{{ __('Enter Redirect URL') }}" id="in_url">
                         <p id="editErr_url" class="mt-2 mb-0 text-danger em"></p>
                     </div>
 
                     <div class="form-group d-none" id="edit-slot-input">
                         <label for="">{{ __('Ad Slot') . '*' }}</label>
-                        <input type="text" class="form-control" name="slot" placeholder="Enter Ad Slot" id="in_slot">
+                        <input type="text" class="form-control" name="slot" placeholder="{{ __('Enter Ad Slot') }}" id="in_slot">
                         <p id="editErr_slot" class="mt-2 mb-0 text-danger em"></p>
                         <p class="mt-2 mb-0">
                             <a href="//prnt.sc/1uwa420" target="_blank"

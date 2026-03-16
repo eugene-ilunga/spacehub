@@ -32,7 +32,7 @@
                 <ul class="list-unstyled m-0">
                     @foreach ($categories as $category)
                         <li class="d-flex align-items-center justify-content-between">
-                            <a href="{{ route('blog', ['category' => $category->slug]) }}" target="_self" title="Blogs"
+                            <a href="{{ route('blog', ['category' => $category->slug]) }}" target="_self" title="{{ __('Blog') }}"
                                 class="blog-category @if ($category->slug == request()->input('category')) active @endif"
                                 data-category_slug="{{ $category->slug }}">
                                 <i class="fal fa-folder"></i>

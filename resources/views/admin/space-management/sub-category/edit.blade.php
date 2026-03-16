@@ -29,7 +29,7 @@
                     <div class="form-group">
                         <label for="">{{ __('Subcategory Name') . '*' }}</label>
                         <input type="text" id="in_name" class="form-control" name="name"
-                            placeholder="Enter Subcategory Name">
+                            placeholder="{{ __('Enter Subcategory Name') }}">
                         <p id="editErr_name" class="mt-2 mb-0 text-danger em"></p>
                     </div>
                     <div class="form-group">

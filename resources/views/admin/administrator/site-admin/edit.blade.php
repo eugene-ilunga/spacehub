@@ -53,7 +53,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Username') . '*' }}</label>
                                 <input type="text" id="in_username" class="form-control" name="username"
-                                    placeholder="Enter Username">
+                                    placeholder="{{ __('Enter Username') }}">
                                 <p id="editErr_username" class="mt-2 mb-0 text-danger em"></p>
                             </div>
                         </div>
@@ -62,7 +62,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Email') . '*' }}</label>
                                 <input type="email" id="in_email" class="form-control" name="email"
-                                    placeholder="Enter Email">
+                                    placeholder="{{ __('Enter Email') }}">
                                 <p id="editErr_email" class="mt-2 mb-0 text-danger em"></p>
                             </div>
                         </div>
@@ -73,7 +73,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('First Name') . '*' }}</label>
                                 <input type="text" id="in_first_name" class="form-control" name="first_name"
-                                    placeholder="Enter First Name">
+                                    placeholder="{{ __('Enter First Name') }}">
                                 <p id="editErr_first_name" class="mt-2 mb-0 text-danger em"></p>
                             </div>
                         </div>
@@ -82,7 +82,7 @@
                             <div class="form-group">
                                 <label for="">{{ __('Last Name') . '*' }}</label>
                                 <input type="text" id="in_last_name" class="form-control" name="last_name"
-                                    placeholder="Enter Last Name">
+                                    placeholder="{{ __('Enter Last Name') }}">
                                 <p id="editErr_last_name" class="mt-2 mb-0 text-danger em"></p>
                             </div>
                         </div>

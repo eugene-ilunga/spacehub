@@ -60,10 +60,10 @@
                             </div>
                             <!-- Slider navigation buttons -->
                             <div class="slider-navigation">
-                                <button type="button" title="Slide prev" class="slider-btn slider-btn-prev radius-0">
+                                <button type="button" title="{{ __('Slide prev') }}" class="slider-btn slider-btn-prev radius-0">
                                     <i class="fal fa-angle-left"></i>
                                 </button>
-                                <button type="button" title="Slide next" class="slider-btn slider-btn-next radius-0">
+                                <button type="button" title="{{ __('Slide next') }}" class="slider-btn slider-btn-next radius-0">
                                     <i class="fal fa-angle-right"></i>
                                 </button>
                             </div>
@@ -290,11 +290,11 @@
                     <h3 class="title mb-20">{{ __('Related Product') }}</h3>
                     <!-- Slider navigation buttons -->
                     <div class="slider-navigation mb-20">
-                        <button type="button" title="Slide prev" class="slider-btn slider-btn-prev btn-outline radius-0"
+                        <button type="button" title="{{ __('Slide prev') }}" class="slider-btn slider-btn-prev btn-outline radius-0"
                             id="shop-slider-prev">
                             <i class="fal fa-angle-left"></i>
                         </button>
-                        <button type="button" title="Slide next" class="slider-btn slider-btn-next btn-outline radius-0"
+                        <button type="button" title="{{ __('Slide next') }}" class="slider-btn slider-btn-next btn-outline radius-0"
                             id="shop-slider-next">
                             <i class="fal fa-angle-right"></i>
                         </button>

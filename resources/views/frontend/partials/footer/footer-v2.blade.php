@@ -32,7 +32,7 @@
                             @if (count($socialMediaInfos) > 0)
                                 <div class="social-link rounded mb-10">
                                     @foreach ($socialMediaInfos as $socialMediaInfo)
-                                        <a href="{{ $socialMediaInfo->url }}" target="_blank" title="Link"><i
+                                        <a href="{{ $socialMediaInfo->url }}" target="_blank" title="{{ __('Link') }}"><i
                                                 class="{{ $socialMediaInfo->icon }}"></i></a>
                                     @endforeach
                                 </div>

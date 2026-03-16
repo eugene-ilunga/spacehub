@@ -3,7 +3,7 @@
         <!-- product_img -->
         <figure class="product_img radius-sm">
             <a href="{{ route('space.details', ['slug' => $space->slug, 'id' => $space->space_id]) }}" target="_self"
-                title="Link" class="lazy-container ratio ratio-5-4 radius-sm">
+                title="{{ __('Link') }}" class="lazy-container ratio ratio-5-4 radius-sm">
                 <img class="lazyload" src="{{ asset('assets/img/spaces/thumbnail-images/' . $space->image) }}"
                     data-src="{{ asset('assets/img/spaces/thumbnail-images/' . $space->image) }}"
                     alt="{{ @$space->title }}">

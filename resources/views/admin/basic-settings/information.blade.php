@@ -67,7 +67,7 @@
                     <div class="form-group">
                         <label>{{ __('Longitude') }}</label>
                         <input type="text" class="form-control" name="longitude"
-                            value="{{ !empty($data) ? $data->longitude : '' }}" placeholder="Enter longitude">
+                            value="{{ !empty($data) ? $data->longitude : '' }}" placeholder="{{ __('Enter longitude') }}">
                         @if ($errors->has('longitude'))
                             <p class="mt-2 mb-0 text-danger">{{ $errors->first('longitude') }}</p>
                         @endif

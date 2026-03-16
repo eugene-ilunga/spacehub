@@ -31,12 +31,12 @@
 
           <div class="form-group">
             <label for="">{{ __('Title') }}</label>
-            <input type="text" class="form-control" name="title" placeholder="Enter Title" id="in_title">
+            <input type="text" class="form-control" name="title" placeholder="{{ __('Enter Title') }}" id="in_title">
           </div>
 
           <div class="form-group">
             <label for="">{{ __('Text') }}</label>
-            <textarea class="form-control" name="text" rows="5" placeholder="Enter Text" id="in_text"></textarea>
+            <textarea class="form-control" name="text" rows="5" placeholder="{{ __('Enter Text') }}" id="in_text"></textarea>
           </div>
         </form>
       </div>

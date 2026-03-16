@@ -50,7 +50,7 @@
                                             <div class="text show-content">
                                                 <p class="mb-1">{{ $information->value }}</p>
                                             </div>
-                                            <div class="read-more-btn">Read More</div>
+                                            <div class="read-more-btn">{{ __('Read More') }}</div>
                                         </div>
                                     </div>
                                 </div>

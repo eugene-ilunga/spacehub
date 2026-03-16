@@ -55,7 +55,7 @@
                     <div class="review-header flex-wrap mb-20">
                         <div class="author d-flex align-items-center justify-content-between gap-3">
                             <div class="author-img">
-                                <a href="#" target="_self" title="Link"
+                                <a href="#" target="_self" title="{{ __('Link') }}"
                                     class="lazy-container ratio ratio-1-1 rounded-circle">
                                     @if (empty($review->user->image))
                                         <img data-src="{{ asset('assets/img/profile.jpg') }}" alt="image"
