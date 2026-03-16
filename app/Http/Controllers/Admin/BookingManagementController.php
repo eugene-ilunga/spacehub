@@ -1,0 +1,598 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Exports\ServiceOrdersExport;
+use App\Http\Controllers\BackEnd\Exception;
+use App\Http\Controllers\Controller;
+use App\Http\Controllers\FrontEnd\OrderProcessController;
+use App\Http\Helpers\BasicMailer;
+use App\Jobs\ProcessMail;
+use App\Models\BasicSettings\Basic;
+use App\Models\Language;
+use App\Models\PaymentGateway\OfflineGateway;
+use App\Models\PaymentGateway\OnlineGateway;
+use App\Models\Seller;
+use App\Models\SpaceBooking;
+use App\Models\SpaceService;
+use App\Models\SpaceServiceContent;
+use App\Models\SubService;
+use App\Models\TimeSlot;
+use App\Models\Transaction;
+use App\Models\User;
+use App\Traits\HandlesInvoiceGeneration;
+use App\Traits\HandlesMailPreparation;
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Validator;
+use Maatwebsite\Excel\Facades\Excel;
+
+
+class BookingManagementController extends Controller
+{
+  use HandlesMailPreparation, HandlesInvoiceGeneration;
+  public function index(Request $request)
+  {
+
+    $bookingNumber = $paymentStatus = $bookingStatus = $seller = $customerName = null;
+
+    if ($request->filled('booking_number')) {
+      $bookingNumber = $request['booking_number'];
+    }
+    if ($request->filled('payment_status')) {
+      $paymentStatus = $request['payment_status'];
+    }
+    if ($request->filled('booking_status')) {
+      $bookingStatus = $request['booking_status'];
+    }
+    if ($request->filled('seller')) {
+      $seller = $request['seller'];
+    }
+    if ($request->filled('customer_name')) {
+      $customerName = $request['customer_name'];
+    }
+    $bookings = SpaceBooking::query()
+      ->when($bookingNumber, function (Builder $query, $bookingNumber) {
+        return $query->where('booking_number', 'like', '%' . $bookingNumber . '%');
+      })
+      ->when($customerName, function (Builder $query, $customerName) {
+        return $query->where('customer_name', 'like', '%' . $customerName . '%');
+      })
+      ->when($paymentStatus, function (Builder $query, $paymentStatus) {
+        return $query->where('payment_status', '=', $paymentStatus);
+      })
+      ->when($bookingStatus, function (Builder $query, $bookingStatus) {
+        return $query->where('booking_status', '=', $bookingStatus);
+      })
+      ->when($seller, function (Builder $query, $seller) {
+        if ($seller == 'admin') {
+          $seller_id = null;
+        } else {
+          $seller_id = $seller;
+        }
+        return $query->where('seller_id', '=', $seller_id);
+      })
+      ->orderByDesc('id')
+      ->paginate(10);
+
+    $language = Language::query()->where('is_default', '=', 1)->first();
+    $bookings->map(function ($order) use ($language) {
+      $space = $order->space()->with('spaceContents')->first();
+      if ($space) {
+        $titleAndSlug = $space->spaceContents->where('language_id', $language->id)->first();
+        if (!empty($titleAndSlug)) {
+          $order['space_title'] = $titleAndSlug->title;
+          $order['space_slug'] = $titleAndSlug->slug;
+        }
+      }
+    });
+    $sellers = Seller::select('id', 'username')->where('id', '!=', 0)->get();
+    return view('admin.booking-management.index', compact('bookings', 'sellers'));
+  }
+
+  public function show($id)
+  {
+
+    $order = SpaceBooking::query()->where('id', $id)->firstOrFail();
+
+    $data['orderInfo'] = $order;
+    $language = getAdminLanguage();
+
+    $space = $order->space()->with('spaceContents')->first();
+
+    $data['space_type'] = $space->space_type;
+    if ($space->space_type == 3) {
+      $data['rent'] = $space->price_per_day;
+      $data['type'] = __('Day');
+    } else if ($space->space_type == 2) {
+      $data['rent'] = $space->rent_per_hour;
+      $data['type'] = __('Hour');
+    } else {
+
+      $timeSlotId = $order->time_slot_id;
+      $timeSlotInfo = TimeSlot::query()->select('time_slot_rent')->where('id', '=', $timeSlotId)->first();
+      if ($space->use_slot_rent == 1) {
+        $data['rent'] = $timeSlotInfo->time_slot_rent ?? 0.00;
+        $data['type'] = null;
+      } else {
+        $data['rent'] = $space->space_rent ?? 0.00;
+        $data['type'] = null;
+      }
+    }
+
+    if ($space) {
+      $titleAndSlug = $space->spaceContents->where('language_id', $language->id)->first();
+      if ($titleAndSlug) {
+        $order['space_title'] = $titleAndSlug->title;
+        $order['space_slug'] = $titleAndSlug->slug;
+      }
+    } else {
+      $order['space_title'] = null;
+      $order['space_slug'] = null;
+    }
+
+    $stageServices = json_decode($order->service_stage_info, true);
+    $otherServices = json_decode($order->other_service_info, true);
+
+    try {
+
+      // Calculate sum for stageServices
+      $subServiceIds = array_column($stageServices, 'price');
+      $totalSumForSubservice = array_sum($subServiceIds);
+
+      // Calculate sum for otherServices
+      $serviceIds = array_column($otherServices, 'spaceServiceId');
+
+      // Check if $serviceIds is not empty before querying the database
+      if (!empty($serviceIds)) {
+        $prices = DB::table('space_services')
+          ->whereIn('id', $serviceIds)
+          ->pluck('price');
+        $totalSumForOtherServices = array_sum($prices->toArray());
+      } else {
+        $totalSumForOtherServices = 0;
+      }
+
+      // Calculate the total sum
+      $data['totalSum'] = $totalSumForSubservice + $totalSumForOtherServices;
+    } catch (\Exception $e) {
+     
+    }
+    $services = [];
+    if (is_array($stageServices)) {
+      $services = array_merge($services, $stageServices);
+    }
+
+    if (is_array($otherServices)) {
+      $services = array_merge($services, $otherServices);
+    }
+
+    $spaceServiceMap = [];
+    foreach ($services as $item) {
+
+      $spaceServiceId = $item['spaceServiceId'];
+      if (!isset($spaceServiceMap[$spaceServiceId])) {
+        $spaceService = SpaceService::with([
+          'serviceContents' => function ($query) use ($language) {
+            $query->where('language_id', $language->id)
+              ->select('space_service_id', 'title', 'slug', 'language_id');
+          }
+        ])->find($item['spaceServiceId']);
+
+        if (!is_null($spaceService)) {
+          $spaceService->number_of_custom_day = $item['numberOfCustomDay'] ?? 1;
+          $spaceService->number_of_guest = $order['number_of_guest'] ?? 1;
+          $spaceService->total_hour = $order['total_hour'] ?? 1;
+          $spaceService->space_type = $space->space_type ?? null;
+
+          $serviceTitle = SpaceServiceContent::select('title as serviceTitle', 'space_service_id')->where([
+            ['space_service_id', $spaceServiceId],
+            ['language_id', $language->id],
+          ])->first();
+
+          if ($serviceTitle) {
+            $spaceService->service_title = $serviceTitle->serviceTitle;
+          }
+        }
+        $spaceServiceMap[$spaceServiceId] = [
+          'spaceService' => $spaceService,
+          'subServices' => [],
+          'global_service_total_price' => 0.00,
+        ];
+      }
+
+      if (array_key_exists('subServiceId', $item)) {
+        $subService = SubService::with([
+          'subServiceContents' => function ($query) use ($language) {
+            $query->where('language_id', $language->id)
+              ->select('sub_service_id', 'title', 'slug', 'language_id');
+          }
+        ])->find($item['subServiceId']);
+
+        $subService->price_type = $spaceService->price_type ?? null;
+
+        if ($space->space_type == 3) {
+          $subService->number_of_custom_day = $item['numberOfCustomDay'] ?? 1;
+        } elseif ($space->space_type == 2) {
+          $subService->total_hour = $order['total_hour'] ?? 1;
+        }
+
+        $subService->number_of_guest = $order['number_of_guest'] ?? 1;
+        
+        if ($subService) {
+
+          $subService->sub_service_title = $subService->subServiceContents->first()->title;
+
+          if ($spaceService['has_sub_services'] == 1) {
+            if ($spaceService['price_type'] == 'fixed') {
+              if ($spaceService['space_type'] == 3) {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price * $subService['number_of_custom_day'];
+              } elseif ($spaceService['space_type'] == 2) {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price * $subService['total_hour'];
+              } else {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price;
+              }
+            } else {
+              if ($spaceService['space_type'] == 3) {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price * $subService['number_of_custom_day'] * $subService['number_of_guest'];
+              } elseif ($spaceService['space_type'] == 2) {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price * $subService['total_hour'] * $subService['number_of_guest'];
+              } else {
+                $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $subService->price * $subService['number_of_guest'];
+              }
+            }
+          }
+        }
+        $spaceServiceMap[$spaceServiceId]['subServices'][] = $subService;
+      }
+
+      if ($spaceService['has_sub_services'] != 1) {
+        if ($spaceService['price_type'] == 'fixed') {
+          if ($spaceService['space_type'] == 3) {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'] * $spaceService['number_of_custom_day'];
+          } elseif ($spaceService['space_type'] == 2) {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'] * $spaceService['total_hour'];
+          } else {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'];
+          }
+        } else {
+          if ($spaceService['space_type'] == 3) {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'] * $spaceService['number_of_custom_day'] * $spaceService['number_of_guest'];
+          } elseif ($spaceService['space_type'] == 2) {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'] * $spaceService['total_hour'] * $spaceService['number_of_guest'];
+          } else {
+            $spaceServiceMap[$spaceServiceId]['global_service_total_price'] += $spaceService['price'] * $spaceService['number_of_guest'];
+          }
+        }
+      } 
+
+    }
+
+    $services = array_values($spaceServiceMap);
+
+    $data['userInfo'] = User::query()->where('id', '=', $order->user_id)->first();
+    $data['sellerInfo'] = Seller::join('seller_infos', 'sellers.id', '=', 'seller_infos.seller_id')
+      ->where('sellers.id', $order->seller_id)
+      ->select('sellers.email', 'sellers.phone', 'sellers.username', 'sellers.username', 'sellers.username', 'seller_infos.name', 'seller_infos.country', 'seller_infos.state', 'seller_infos.address', 'sellers.id', 'seller_infos.city')
+      ->first();
+
+    $data['services'] = $services;
+    $data['language'] = $language;
+
+    $data['basic'] = Basic::select('base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position', 'time_format')->first();
+
+    $onlineGateways = OnlineGateway::query()->where('status', '=', 1)->get()->map(function ($gateway) {
+      $gateway->type = 'online';
+      return $gateway;
+    });
+
+    $offlineGateways = OfflineGateway::query()->where('status', '=', 1)->orderBy('serial_number', 'asc')->get()->map(function ($gateway) {
+      $gateway->type = 'offline';
+      return $gateway;
+    });
+    
+    $data['gateways'] = $onlineGateways->merge($offlineGateways);
+    return view('admin.booking-management.show', $data);
+  }
+
+  public function updateBookingStatus(Request $request, $id)
+  {
+    $order = SpaceBooking::query()->findOrFail($id);
+
+    if ($request['booking_status'] == 'approved') {
+
+      if ($order->payment_status == 'completed') {
+        $order->update([
+          'booking_status' => 'approved'
+        ]);
+        if ($order->gateway_type == 'offline') {
+          $this->finalizeOfflineBooking($order);
+        }
+        $request->session()->flash('success', __('Booking status updated successfully') . '!');
+      } else {
+        $request->session()->flash('warning', __('Payment is not complete yet') . '!');
+      }
+    } else if ($request['booking_status'] == 'pending') {
+
+      $order->update([
+        'booking_status' => 'pending',
+      ]);
+      $request->session()->flash('success', __('Booking status updated successfully') . '!');
+    } else {
+      $order->update([
+        'booking_status' => 'rejected',
+      ]);
+
+      subtractAmountFromSeller([
+        'seller_id' => $order->seller_id,
+        'sub_total' => $order->sub_total
+      ]);
+
+      subtractEarnings([
+        'life_time_earning' => $order->grand_total ?? 0,
+        'total_profit' => $order->seller_id ? $order->tax : $order->grand_total,
+      ]);
+
+      $mailData = $request->all();
+
+      ProcessMail::dispatch($mailData, $order, 'Booking rejected')->delay(now()->addSeconds(5));
+      $transaction = Transaction::where([['booking_number', $id], ['transcation_type', 1]])->first();
+      if ($transaction) {
+        $transaction->update([
+          'payment_status' => 'rejected',
+        ]);
+      }
+
+      $request->session()->flash('success', __('Booking status updated successfully') . '!');
+    }
+    return redirect()->back();
+  }
+
+  public function updatePaymentStatus(Request $request, $id)
+  {
+    $order = SpaceBooking::query()->findOrFail($id);
+    if ($request['payment_status'] == 'completed') {
+      $order->update([
+        'payment_status' => 'completed'
+      ]);
+      $request->session()->flash('success', __('Payment status updated successfully') . '!');
+    } else if ($request['payment_status'] == 'pending') {
+
+      $order->update([
+        'payment_status' => 'pending',
+      ]);
+      $request->session()->flash('success', __('Payment status updated successfully') . '!');
+    } else {
+      $order->update([
+        'payment_status' => 'rejected',
+      ]);
+
+      $mailData = $request->all();
+
+      ProcessMail::dispatch($mailData, $order, 'Booking rejected')->delay(now()->addSeconds(5));
+      //status change on transaction
+      $transaction = Transaction::where([['booking_number', $id], ['transcation_type', 1]])->first();
+      if ($transaction) {
+        $transaction->update([
+          'payment_status' => 'rejected',
+        ]);
+      }
+
+      $request->session()->flash('success', __('Payment status updated successfully') . '!');
+    }
+    return redirect()->back();
+  }
+
+  public function bookingReport(Request $request)
+  {
+    $data['onlineGateways'] = OnlineGateway::query()->where('status', '=', 1)->get();
+    $data['offlineGateways'] = OfflineGateway::query()->where('status', '=', 1)->orderBy('serial_number', 'asc')->get();
+
+    $from = $to = $paymentGateway = $paymentStatus = $bookingStatus = $seller = null;
+
+    // Initialize empty paginator and zero metrics by default
+    $records = new \Illuminate\Pagination\LengthAwarePaginator([], 0, 10);
+    $data['totalBookings'] = $data['totalEarnings'] = 0;
+    $data['timeslotBookings'] = $data['timeslotEarnings'] = 0;
+    $data['hourlyBookings'] = $data['hourlyEarnings'] = 0;
+    $data['multidayBookings'] = $data['multidayEarnings'] = 0;
+
+    // Only query data if a date range is provided
+    if ($request->filled('from') && $request->filled('to')) {
+      $from = Carbon::parse($request->from)->format('Y-m-d');
+      $to = Carbon::parse($request->to)->format('Y-m-d');
+
+      if ($request->filled('payment_gateway')) {
+        $paymentGateway = $request->payment_gateway;
+      }
+      if ($request->filled('payment_status')) {
+        $paymentStatus = $request->payment_status;
+      }
+      if ($request->filled('booking_status')) {
+        $bookingStatus = $request->booking_status;
+      }
+      if ($request->filled('seller')) {
+        $seller = $request['seller'];
+      }
+
+      // Base query for SpaceBooking with filters
+      $query = SpaceBooking::query()->select(
+        'booking_number',
+        'customer_name',
+        'customer_email',
+        'space_id',
+        'service_stage_info',
+        'other_service_info',
+        'sub_service_info',
+        'sub_total',
+        'tax',
+        'grand_total',
+        'currency_symbol',
+        'currency_symbol_position',
+        'payment_method',
+        'payment_status',
+        'booking_status',
+        'space_rent_price',
+        'booking_date',
+        'start_time',
+        'end_time',
+        'created_at'
+      )
+        ->whereBetween('created_at', [$from, $to])
+        ->when($paymentGateway, function (Builder $query, $paymentGateway) {
+          return $query->where('payment_method', '=', $paymentGateway);
+        })
+        ->when($paymentStatus, function (Builder $query, $paymentStatus) {
+          return $query->where('payment_status', '=', $paymentStatus);
+        })
+        ->when($bookingStatus, function (Builder $query, $bookingStatus) {
+          return $query->where('booking_status', '=', $bookingStatus);
+        })
+        ->when($seller, function (Builder $query, $seller) {
+          $seller_id = $seller == 'admin' ? null : $seller;
+          return $query->where('seller_id', '=', $seller_id);
+        });
+
+      // Paginated records for display
+      $records = $query->orderByDesc('id')->paginate(10);
+
+      // Calculate total bookings and earnings
+      $data['totalBookings'] = $records->count();
+      $data['totalEarnings'] = $records->sum('grand_total');
+
+      // Fetch all filtered records for metrics
+      $filteredBookings = $query->with('space')->get();
+
+      // Calculate metrics by space_type
+      $data['timeslotBookings'] = $filteredBookings->where('space.space_type', 1)->count();
+      $data['timeslotEarnings'] = $filteredBookings->where('space.space_type', 1)->sum('grand_total');
+      $data['hourlyBookings'] = $filteredBookings->where('space.space_type', 2)->count();
+      $data['hourlyEarnings'] = $filteredBookings->where('space.space_type', 2)->sum('grand_total');
+      $data['multidayBookings'] = $filteredBookings->where('space.space_type', 3)->count();
+      $data['multidayEarnings'] = $filteredBookings->where('space.space_type', 3)->sum('grand_total');
+    }
+
+    // Fetch language and map space titles/slugs
+    $language = Language::query()->where('is_default', '=', 1)->first();
+    $records->map(function ($booking) use ($language) {
+      $space = $booking->space()->with('spaceContents')->first();
+      if ($space) {
+        $titleAndSlug = $space->spaceContents->where('language_id', $language->id)->first();
+        $booking['space_title'] = $titleAndSlug ? $titleAndSlug->title : '';
+        $booking['space_slug'] = $titleAndSlug ? $titleAndSlug->slug : '';
+      }
+    });
+
+    Session::put('booking_records', $records);
+    $data['orders'] = $records;
+    $data['basic'] = Basic::select('base_currency_symbol', 'base_currency_symbol_position', 'base_currency_text', 'base_currency_text_position')->first();
+    $data['from'] = $from;
+    $data['to'] = $to;
+
+    return view('admin.booking-management.report', $data);
+  }
+
+  public function exportReport()
+  {
+    if (Session::has('booking_records')) {
+      $bookingRecords = Session::get('booking_records');
+
+      if (count($bookingRecords) == 0) {
+        Session::flash('warning', __('No booking records found to export') . '!');
+
+        return redirect()->back();
+      } else {
+        return Excel::download(new ServiceOrdersExport($bookingRecords), 'service-orders.csv');
+      }
+    } else {
+      Session::flash('error', __('There has no booking records to export') . '.');
+
+      return redirect()->back();
+    }
+  }
+
+
+  public function destroy(Request $request)
+  {
+    $this->deleteBooking($request->id);
+
+    return redirect()->back()->with('success', __('Booking record deleted successfully') . '!');
+  }
+
+  public function bulkDestroy(Request $request)
+  {
+    $ids = $request->ids;
+
+    foreach ($ids as $id) {
+      $this->deleteBooking($id);
+    }
+
+    $request->session()->flash('success', __('Booking records deleted successfully') . '!');
+
+    return response()->json(['status' => 'success'], 200);
+  }
+
+  // order deletion code
+  public function deleteBooking($id)
+  {
+    $booking = SpaceBooking::query()->find($id);
+
+    // delete the invoice
+    @unlink(public_path('assets/file/invoices/space/' . $booking->invoice));
+
+    // delete s-order
+    $booking->delete();
+  }
+
+  public function sendMail(Request $request, $id)
+  {
+
+    // validation
+    $rules = [
+      'subject' => 'required|max:255'
+    ];
+    $validator = Validator::make($request->all(), $rules);
+    if ($validator->fails()) {
+      Session::flash('error', __('Subject feild is required') . '.');
+      return back();
+    }
+    $serviceOrder = SpaceBooking::query()->find($id);
+
+    $mailData = [];
+    $mailData['subject'] = $request->subject;
+
+    if ($request->filled('message')) {
+      $msg = $request->message;
+    } else {
+      $msg = '';
+    }
+
+    $mailData['body'] = $msg;
+
+    $mailData['recipient'] = $serviceOrder->customer_email;
+
+    $mailData['sessionMessage'] = __('Mail has been sent successfully') . '!';
+
+    BasicMailer::sendMail($mailData);
+    return redirect()->back();
+  }
+
+  protected function finalizeOfflineBooking($booking)
+  {
+
+    // Generate invoice if not exists
+    if (!$booking->invoice) {
+      $orderProcess = new OrderProcessController();
+      $invoice = $orderProcess->generateInvoice($booking);
+      $booking->update(['invoice' => $invoice]);
+    }
+
+    // Send notifications
+    $orderProcess->prepareMail($booking);
+    $orderProcess->prepareMailForVendor($booking);
+  }
+}

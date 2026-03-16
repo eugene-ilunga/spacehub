@@ -1,0 +1,164 @@
+<!-- Header-area start -->
+<header class="header-area header_v1">
+    <!-- Start mobile menu -->
+    <div class="mobile-menu">
+        <div class="container">
+            <div class="mobile-menu-wrapper"></div>
+        </div>
+    </div>
+    <!-- End mobile menu -->
+
+    <div class="main-responsive-nav">
+        <div class="container">
+            <!-- Mobile Logo -->
+            <div class="logo">
+                <a href="{{ route('index') }}">
+                    <img src="{{ asset('assets/img/' . $basicInfo->logo) }}" height="50" alt="{{ __('logo') }}">
+                </a>
+            </div>
+            <!-- Menu toggle button -->
+            <button class="menu-toggler" type="button">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
+    </div>
+
+    <div class="main-navbar">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg">
+                <!-- Logo -->
+                <a class="navbar-brand" href="{{ route('index') }}">
+                    <img src="{{ asset('assets/img/' . $basicInfo->logo) }}" alt="{{ __('Logo') }}">
+                </a>
+                <!-- Navigation items -->
+                <div class="collapse navbar-collapse">
+                    <ul id="mainMenu" class="navbar-nav mobile-item mx-auto">
+                        @php
+                            $menuDatas = json_decode($menuInfos);
+                            $shop_status = $basicInfo->shop_status ?? 1;
+                        @endphp
+                        @foreach ($menuDatas as $menuData)
+                            @php $href = get_href($menuData);@endphp
+
+                            {{-- Check if menu text is "Shop" AND shop_status is 1 --}}
+                            @if ($menuData->text == 'Shop' && $shop_status != 1)
+                                @continue
+                            @endif
+
+                            @if (!property_exists($menuData, 'children'))
+                                <li class="nav-item">
+                                    <a class="nav-link {{ url()->current() == $href ? 'active' : '' }}"
+                                        href="{{ $href }}">{{ $menuData->text }}</a>
+                                </li>
+                            @else
+                                <li class="nav-item">
+                                    <a class="nav-link toggle {{ url()->current() == $href ? 'active' : '' }}"
+                                        href="{{  $href === '#' ? 'javascript:void(0)' : $href }}">{{ $menuData->text }}<i
+                                            class="fal fa-plus"></i></a>
+                                    <ul class="menu-dropdown">
+                                        @php $childMenuDatas = $menuData->children; @endphp
+
+                                        @foreach ($childMenuDatas as $childMenuData)
+                                            @php $child_href = get_href($childMenuData); @endphp
+                                            <li class="nav-item">
+                                                <a class="nav-link {{ url()->current() == $child_href ? 'active' : '' }}"
+                                                    href="{{ $child_href }}">{{ $childMenuData->text }}</a>
+                                            </li>
+                                        @endforeach
+                                    </ul>
+                                </li>
+                            @endif
+                        @endforeach
+
+                    </ul>
+                </div>
+                <div class="more-option mobile-item">
+                    @if ($basicInfo->is_language == 1)
+                        <div class="item">
+                            <div class="language">
+                                <form action="{{ route('change_language') }}" method="GET">
+                                    <select class="niceselect" name="lang_code" onchange="this.form.submit()">
+                                        @foreach ($allLanguageInfos as $languageInfo)
+                                            <option value="{{ $languageInfo->code }}" @selected($languageInfo->code == $currentLanguageInfo->code)>
+                                                {{ __($languageInfo->name) }}
+                                            </option>
+                                        @endforeach
+
+                                    </select>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="item">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-outline radius-xsm dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fal fa-user-circle"></i>
+
+                                <span>
+                                    @if (Auth::user())
+                                        {{ Auth::user()->username }}
+                                    @else
+                                        {{ __('Customer') }}
+                                    @endif
+
+                            </button>
+                            @if (!Auth::guard('web')->check())
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('user.login') }}">{{ __('Login') }}</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('user.signup') }}">{{ __('Signup') }}</a>
+                                    </li>
+                                </ul>
+                            @else
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('user.dashboard') }}">{{ __('Dashboard') }}</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('user.logout') }}">{{ __('Logout') }}</a>
+                                    </li>
+                                </ul>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="item">
+                        <div class="dropdown">
+                            <button class="btn btn-sm btn-primary radius-xsm dropdown-toggle" type="button"
+                                data-bs-toggle="dropdown" aria-expanded="false">
+                                <i class="fal fa-user-friends"></i>
+                                <span>
+                                    @if (!Auth::guard('seller')->check())
+                                        {{ __('Vendor') }}
+                                    @else
+                                        {{ Auth::guard('seller')->user()->username }}
+                                    @endif
+                                </span>
+                            </button>
+                            <ul class="dropdown-menu">
+
+                                @if (!Auth::guard('seller')->check())
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('vendor.login') }}">{{ __('Login') }}</a>
+                                    </li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('vendor.signup') }}">{{ __('Signup') }}</a>
+                                    </li>
+                                @else
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('vendor.dashboard') }}">{{ __('Dashboard') }}</a></li>
+                                    <li><a class="dropdown-item"
+                                            href="{{ route('vendor.logout') }}">{{ __('Logout') }}</a>
+                                    </li>
+                                @endif
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+    </div>
+</header>
+<!-- Header-area end -->
