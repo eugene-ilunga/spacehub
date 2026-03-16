@@ -46,15 +46,11 @@
 @if (!empty($currentLanguageInfo) && $currentLanguageInfo->direction == 1)
     <link rel="stylesheet" href="{{ asset('assets/frontend/css/rtl.css') }}">
 @endif
-{{-- user-selected color for footer --}}
+{{-- user-selected background color for footer --}}
 @if ($footerInfo && $footerInfo->footer_background_color)
 <style>
-    .footer-area .footer-widget .footer-links i,
-    .footer-area .footer-links li a,
-    .footer-area .footer-widget .title,
-    .footer-area .footer-widget p,
-    .footer-area .copy-right-area .container .copy-right-content span {
-        color: #{{ $footerInfo->footer_background_color ?? ffffff }};
+    .footer-area {
+        background-color: #{{ $footerInfo->footer_background_color ?? 'ffffff' }};
     }
 </style>  
 @endif
