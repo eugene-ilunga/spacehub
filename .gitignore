@@ -25,3 +25,31 @@ yarn-error.log
 .env
 /storage/framework/*
 /storage/logs/*
+
+# Laravel user-generated uploads (keep out of git)
+/public/assets/img/admins/*
+/public/assets/img/advertisements/*
+/public/assets/img/attachments/*
+/public/assets/img/city/*
+/public/assets/img/clients/*
+/public/assets/img/popups/*
+/public/assets/img/posts/*
+/public/assets/img/products/*
+/public/assets/img/space-categories/*
+/public/assets/img/spaces/*
+/public/assets/img/sub-services/*
+/public/assets/img/users/*
+
+# Keep directory placeholders if needed
+!/public/assets/img/admins/.gitkeep
+!/public/assets/img/advertisements/.gitkeep
+!/public/assets/img/attachments/.gitkeep
+!/public/assets/img/city/.gitkeep
+!/public/assets/img/clients/.gitkeep
+!/public/assets/img/popups/.gitkeep
+!/public/assets/img/posts/.gitkeep
+!/public/assets/img/products/.gitkeep
+!/public/assets/img/space-categories/.gitkeep
+!/public/assets/img/spaces/.gitkeep
+!/public/assets/img/sub-services/.gitkeep
+!/public/assets/img/users/.gitkeep
