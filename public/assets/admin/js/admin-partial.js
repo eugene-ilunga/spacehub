@@ -250,9 +250,23 @@ $(document).ready(function () {
       error: function (error) {
         let errors = ``;
 
-        for (let x in error.responseJSON.errors) {
-          errors += `<li>
+        if (error.responseJSON && error.responseJSON.errors) {
+          for (let x in error.responseJSON.errors) {
+            errors += `<li>
                 <p class="text-danger mb-0">${error.responseJSON.errors[x][0]}</p>
+              </li>`;
+          }
+        } else {
+          let fallbackMessage = 'Something went wrong. Please try again.';
+
+          if (error.responseJSON && error.responseJSON.message) {
+            fallbackMessage = error.responseJSON.message;
+          } else if (error.statusText) {
+            fallbackMessage = error.statusText;
+          }
+
+          errors += `<li>
+                <p class="text-danger mb-0">${fallbackMessage}</p>
               </li>`;
         }
         $('#serviceErrors ul').html(errors);

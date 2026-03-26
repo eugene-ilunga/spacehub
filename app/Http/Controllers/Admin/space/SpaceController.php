@@ -37,6 +37,7 @@ use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
@@ -390,7 +391,13 @@ class SpaceController extends Controller
   public function uploadImage(Request $request)
   {
     $rule = [
-      'slider_image' => new ImageMimeTypeRule()
+      'slider_image' => [
+        'required',
+        'image',
+        new ImageMimeTypeRule(),
+        'max:5120',
+        'dimensions:min_width=860,min_height=610'
+      ]
     ];
     $validator = Validator::make($request->all(), $rule);
     if ($validator->fails()) {
@@ -436,38 +443,41 @@ class SpaceController extends Controller
   public function store(Request $request): JsonResponse|RedirectResponse
   {
 
-    //check admin's membership available or not ?
-    $admin_package_check = Membership::where('seller_id', 0)->first();
-    if (!$admin_package_check) {
+    // Ensure admin package exists (check Package independently from Membership)
+    $admin_package = Package::find(999999);
+    if (!$admin_package) {
+      $admin_package = new Package();
+      $admin_package->id = 999999;
+      $admin_package->price = 0;
+      $admin_package->term = 'lifetime';
+      $admin_package->save();
+    }
 
-      $admin_pacakge = new Package();
-      $admin_pacakge->id = 999999;
-      $admin_pacakge->price = 0;
-      $admin_pacakge->term = 'lifetime';
-      $admin_pacakge->save();
-
+    // Ensure admin membership exists
+    $admin_membership = Membership::where('seller_id', 0)->first();
+    if (!$admin_membership) {
       Membership::create([
-        'price' => $admin_pacakge->price,
+        'price' => $admin_package->price,
         'status' => 1,
-        'package_id' => $admin_pacakge->id,
+        'package_id' => $admin_package->id,
         'seller_id' => 0,
         'start_date' => Carbon::now(),
         'expire_date' => Carbon::now()->addDays(99999),
       ]);
     }
-    //check dummy admin's exist or not in sellers table
-    $admin_seller_check = Seller::where('id', 0)->first();
+
+    // Ensure dummy admin seller exists (id=0)
     $admin = Admin::first();
-    if (empty($admin_seller_check)) {
-      $admin_seller = new Seller();
-      $admin_seller->id = 0;
-      $admin_seller->email = $admin->email;
-      $admin_seller->recipient_mail = $admin->email;
-      $admin_seller->username = $admin->username;
-      $admin_seller->status = 1;
-      $admin_seller->save();
-      $admin_seller->id = 0;
-      $admin_seller->save();
+    if (!Seller::where('id', 0)->exists()) {
+      DB::table('sellers')->insert([
+        'id' => 0,
+        'email' => $admin->email,
+        'recipient_mail' => $admin->email,
+        'username' => $admin->username,
+        'status' => 1,
+        'created_at' => now(),
+        'updated_at' => now(),
+      ]);
     }
 
     $messages       = [];
@@ -490,7 +500,10 @@ class SpaceController extends Controller
 
     if (!$matched['matched']) {
       session()->flash('warning', __('Space type cannot be null') . '. ' . __('Please select a valid space type') . '.');
-      return Response::json(['status' => 'success'], 200);
+      return Response::json([
+        'status' => 'error',
+        'message' => __('Space type cannot be null') . '. ' . __('Please select a valid space type') . '.'
+      ], 422);
     } else {
       $type = $matched['space_type'];
     }
@@ -506,7 +519,7 @@ class SpaceController extends Controller
     }
 
     $rules = [
-      'thumbnail_image'         => 'required|',
+      'thumbnail_image'         => 'required|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
       'latitude'                => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'               => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'               => 'required|numeric',
@@ -669,7 +682,7 @@ class SpaceController extends Controller
     $thumbnailImage = UploadFile::store('./assets/img/spaces/thumbnail-images/', $request->file('thumbnail_image'));
 
     $sliderArr = [];
-    foreach ($request['slider_images'] as $image) {
+    foreach (($request['slider_images'] ?? []) as $image) {
       if (file_exists(public_path('assets/img/spaces/slider-images/' . $image))) {
         $sliderArr[] = $image;
       }
@@ -860,6 +873,7 @@ class SpaceController extends Controller
     $messages  = [];
     $languageCodes = Language::query()->select('code')->get()->pluck('code');
     $rules = [
+      'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
       'latitude'       => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'      => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'      => 'required|integer',

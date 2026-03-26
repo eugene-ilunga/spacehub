@@ -249,7 +249,13 @@ class VendorSpaceController extends Controller
   {
 
     $rule = [
-      'slider_image' => new ImageMimeTypeRule()
+      'slider_image' => [
+        'required',
+        'image',
+        new ImageMimeTypeRule(),
+        'max:5120',
+        'dimensions:min_width=860,min_height=610'
+      ]
     ];
     $validator = Validator::make($request->all(), $rule);
     if ($validator->fails()) {
@@ -306,7 +312,10 @@ class VendorSpaceController extends Controller
     $matched = Space::checkSpaceType($request, $request['seller_id'], $basicSetting);
     if (!$matched['matched']) {
       session()->flash('warning', __('Space type cannot be null') . '. ' . __('Please select a valid space type') . '.');
-      return Response::json(['status' => 'success'], 200);
+      return Response::json([
+        'status' => 'error',
+        'message' => __('Space type cannot be null') . '. ' . __('Please select a valid space type') . '.'
+      ], 422);
     } else {
       $type = $matched['space_type'];
     }
@@ -321,7 +330,7 @@ class VendorSpaceController extends Controller
       $availableTypes = 3;
     }
     $rules = [
-      'thumbnail_image' => 'required',
+      'thumbnail_image' => 'required|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
       'latitude'        => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'       => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'       => 'required|numeric',
@@ -478,7 +487,7 @@ class VendorSpaceController extends Controller
     // store thumbnail image in storage
     $thumbnailImage = UploadFile::store('./assets/img/spaces/thumbnail-images/', $request->file('thumbnail_image'));
     $sliderArr = [];
-    foreach ($request['slider_images'] as $image) {
+    foreach (($request['slider_images'] ?? []) as $image) {
       if (file_exists(public_path('assets/img/spaces/slider-images/' . $image))) {
         $sliderArr[] = $image;
       }
@@ -629,6 +638,7 @@ class VendorSpaceController extends Controller
     $messages = [];
     $languageCodes = Language::query()->select('code')->get()->pluck('code');
     $rules = [
+      'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
       'latitude'   => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'  => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'  => 'required|integer',
