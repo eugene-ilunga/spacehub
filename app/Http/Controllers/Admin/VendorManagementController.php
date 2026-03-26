@@ -337,7 +337,7 @@ class VendorManagementController extends Controller
     ];
 
     if ($request->hasFile('photo')) {
-      $rules['photo'] = 'mimes:png,jpeg,jpg|dimensions:min_width=100,max_width=100,min_width=100,min_height=100';
+      $rules['photo'] = 'mimes:png,jpeg,jpg';
     }
 
     $languages = Language::get();

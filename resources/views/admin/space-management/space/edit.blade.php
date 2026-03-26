@@ -143,7 +143,7 @@
                                     <div class="fallback"></div>
                                 </form>
                                 <span class="text-warning mt-3 mb-0">
-                                    {{ '*' . __('Upload image at least 860x610 px for best quality') . '. ' . __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</span>
+                                    {{ '*' . __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</span>
                                 @if ($sellerId != 0)
                                     <span class="text-warning mt-3 mb-0">
                                         {{ __('You can upload maximum') . ' ' }}
@@ -186,7 +186,7 @@
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#thumbnail-image-modal">{{ __('Choose Image') }}</button>
                                     <p class="text-warning">{{ __('Recommended Image Size') . ': ' }} <span dir="ltr"> {{ '750 x 600 px'}}</span></p>
-                                    <p class="text-warning">{{ __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Minimum size') . ': 255 x 255 px. ' . __('Maximum file size') . ': 5MB.' }}</p>
+                                    <p class="text-warning">{{ __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</p>
                                 </div>
 
                                 <div class="row">

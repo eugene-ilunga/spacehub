@@ -395,8 +395,7 @@ class SpaceController extends Controller
         'required',
         'image',
         new ImageMimeTypeRule(),
-        'max:5120',
-        'dimensions:min_width=860,min_height=610'
+        'max:5120'
       ]
     ];
     $validator = Validator::make($request->all(), $rule);
@@ -519,7 +518,7 @@ class SpaceController extends Controller
     }
 
     $rules = [
-      'thumbnail_image'         => 'required|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
+      'thumbnail_image'         => 'required|image|mimes:jpg,jpeg,png|max:5120',
       'latitude'                => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'               => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'               => 'required|numeric',
@@ -873,7 +872,7 @@ class SpaceController extends Controller
     $messages  = [];
     $languageCodes = Language::query()->select('code')->get()->pluck('code');
     $rules = [
-      'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120|dimensions:min_width=255,min_height=255',
+      'thumbnail_image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
       'latitude'       => ['nullable', 'numeric', 'between:-90,90'],
       'longitude'      => ['nullable', 'numeric', 'between:-180,180'],
       'min_guest'      => 'required|integer',

@@ -28,7 +28,6 @@ class UpdateProfileRequest extends FormRequest
     return [
       'image' => $this->hasFile('image') ? [
         new ImageMimeTypeRule(),
-        'dimensions:min_width=80,max_width=80,min_width=80,min_height=80'
       ] : '',
       'first_name' => 'required',
       'username' => 'required|unique:users,username,' . Auth::guard('web')->user()->id,

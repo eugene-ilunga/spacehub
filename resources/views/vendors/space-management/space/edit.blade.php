@@ -100,7 +100,7 @@
                                     <div class="fallback"></div>
                                 </form>
                                 <p class="text-warning mt-3 mb-0">
-                                    {{ '*' . __('Upload image at least 860x610 px for best quality') . '. ' . __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</p>
+                                    {{ '*' . __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</p>
                                 <p class="em text-danger mt-3 mb-0" id="err_slider_image"></p>
                             </div>
                             @php
@@ -136,7 +136,7 @@
                                     <button type="button" class="btn btn-primary" data-toggle="modal"
                                         data-target="#thumbnail-image-modal">{{ __('Choose Image') }}</button>
                                     <p class="text-warning">{{ __('Recommended Image Size') . ':' }} <strong dir="ltr">{{ '750 x 600 px' }}</strong></p>
-                                    <p class="text-warning">{{ __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Minimum size') . ': 255 x 255 px. ' . __('Maximum file size') . ': 5MB.' }}</p>
+                                    <p class="text-warning">{{ __('Allowed formats') . ': JPG, JPEG, PNG. ' . __('Maximum file size') . ': 5MB.' }}</p>
                                 </div>
 
                                 <div class="row">
