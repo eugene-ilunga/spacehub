@@ -160,6 +160,7 @@ Route::middleware('change.lang')->group(function () {
   Route::get('/about-us', 'FrontEnd\AboutUsController@index')->name('about_us');
   Route::get('/faq', 'FrontEnd\FaqController@faq')->name('faq');
   Route::get('/privacy-policy', 'FrontEnd\PrivacyPolicyController@index')->name('privacy_policy');
+  Route::get('/terms-and-conditions', 'FrontEnd\TermsConditionsController@index')->name('terms_conditions');
 
   // Contact form routes
   Route::prefix('/contact')->group(function () {
