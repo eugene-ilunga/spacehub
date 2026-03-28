@@ -8,396 +8,413 @@
 
 @section('style')
 <style>
-    /* ── Privacy Policy – Custom Styles ── */
-    .privacy-hero {
-        background: linear-gradient(135deg, var(--color-primary) 0%, #8b0030 100%);
-        padding: 80px 0 60px;
-        position: relative;
-        overflow: hidden;
-    }
-    .privacy-hero::before {
-        content: '';
-        position: absolute;
-        top: -60px; right: -60px;
-        width: 320px; height: 320px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.06);
-        pointer-events: none;
-    }
-    .privacy-hero::after {
-        content: '';
-        position: absolute;
-        bottom: -80px; left: -40px;
-        width: 260px; height: 260px;
-        border-radius: 50%;
-        background: rgba(255,255,255,.04);
-        pointer-events: none;
-    }
-    .privacy-hero .breadcrumb-nav a,
-    .privacy-hero .breadcrumb-nav span {
-        font-size: 13px;
-        color: rgba(255,255,255,.75);
-        text-decoration: none;
-    }
-    .privacy-hero .breadcrumb-nav .separator { margin: 0 8px; }
-    .privacy-hero .breadcrumb-nav .current { color: #fff; }
-    .privacy-hero h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; color: #fff; margin: 16px 0 12px; line-height: 1.2; }
-    .privacy-hero .update-badge {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: rgba(255,255,255,.12);
-        border: 1px solid rgba(255,255,255,.2);
-        color: rgba(255,255,255,.9);
-        font-size: 13px; font-weight: 500;
-        padding: 6px 16px; border-radius: var(--radius-pill);
-        backdrop-filter: blur(4px);
-    }
-
-    /* ── Layout ── */
-    .privacy-body { padding: 80px 0 100px; background: var(--bg-2); }
-
-    /* ── Sidebar TOC ── */
-    .toc-card {
-        background: #fff;
-        border-radius: var(--radius-lg);
-        box-shadow: var(--shadow-md);
-        border: 1px solid var(--border-color);
-        overflow: hidden;
-        position: sticky;
-        top: 30px;
-    }
-    .toc-header {
-        background: linear-gradient(135deg, var(--color-primary) 0%, #8b0030 100%);
-        padding: 20px 24px;
-        display: flex; align-items: center; gap: 10px;
-    }
-    .toc-header i { color: #fff; font-size: 16px; }
-    .toc-header h6 { color: #fff; font-weight: 600; font-size: 14px; margin: 0; letter-spacing: .4px; text-transform: uppercase; }
-    .toc-list { list-style: none; padding: 12px 0; margin: 0; }
-    .toc-list li a {
-        display: flex; align-items: center; gap: 10px;
-        padding: 10px 24px;
-        color: var(--color-medium); font-size: 13.5px;
-        text-decoration: none; transition: all .2s ease;
-        border-left: 3px solid transparent;
-    }
-    .toc-list li a:hover,
-    .toc-list li a.active {
-        background: var(--bg-primary-light);
-        color: var(--color-primary);
-        border-left-color: var(--color-primary);
-    }
-    .toc-list li a .toc-num {
-        display: inline-flex; align-items: center; justify-content: center;
-        width: 22px; height: 22px; flex-shrink: 0;
-        background: var(--bg-1); border-radius: 50%;
-        font-size: 11px; font-weight: 700;
-        color: var(--color-medium);
-        transition: all .2s ease;
-    }
-    .toc-list li a:hover .toc-num,
-    .toc-list li a.active .toc-num {
-        background: var(--color-primary);
-        color: #fff;
-    }
-    .toc-contact-strip {
-        margin: 0; padding: 16px 24px;
-        background: var(--bg-1);
-        border-top: 1px solid var(--border-color);
-    }
-    .toc-contact-strip p { font-size: 12.5px; color: var(--color-medium); margin-bottom: 10px; }
-    .toc-contact-strip a {
-        display: inline-flex; align-items: center; gap: 6px;
-        font-size: 13px; font-weight: 600; color: var(--color-primary);
-        text-decoration: none;
-    }
-
-    /* ── Sections ── */
-    .policy-section {
-        background: #fff;
-        border-radius: var(--radius-lg);
-        border: 1px solid var(--border-color);
-        box-shadow: 0 2px 16px -4px rgba(8,0,42,.06);
-        padding: 40px 44px;
-        margin-bottom: 28px;
-        scroll-margin-top: 40px;
-    }
-    @media (max-width: 767.98px) {
-        .policy-section { padding: 28px 20px; }
-    }
-    .section-icon-title {
-        display: flex; align-items: flex-start; gap: 18px;
-        margin-bottom: 24px; padding-bottom: 20px;
-        border-bottom: 2px solid var(--bg-1);
-    }
-    .section-badge {
-        display: inline-flex; align-items: center; justify-content: center;
-        width: 48px; height: 48px; flex-shrink: 0;
-        background: var(--bg-primary-light);
-        border-radius: var(--radius-md);
-    }
-    .section-badge i { font-size: 20px; color: var(--color-primary); }
-    .section-title-block h3 {
-        font-size: 20px; font-weight: 700;
-        color: var(--color-dark); margin: 0 0 4px;
-        line-height: 1.3;
-    }
-    .section-title-block .section-number {
-        font-size: 12px; font-weight: 600; letter-spacing: .6px;
-        color: var(--color-primary); text-transform: uppercase;
-    }
-
-    .policy-section p {
-        color: var(--color-medium); font-size: 15px; line-height: 1.8;
-        margin-bottom: 14px;
-    }
-    .policy-section p:last-child { margin-bottom: 0; }
-
-    /* Data categories grid */
-    .data-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-top: 20px; }
-    .data-card {
-        background: var(--bg-2); border-radius: var(--radius-md);
-        border: 1px solid var(--border-color);
-        padding: 20px;
-        transition: border-color .2s ease, box-shadow .2s ease;
-    }
-    .data-card:hover { border-color: var(--color-primary); box-shadow: 0 4px 16px rgba(var(--color-primary-rgb),.1); }
-    .data-card .data-card-icon {
-        width: 40px; height: 40px;
-        background: var(--bg-primary-light);
-        border-radius: var(--radius-sm);
-        display: flex; align-items: center; justify-content: center;
-        margin-bottom: 12px;
-    }
-    .data-card .data-card-icon i { color: var(--color-primary); font-size: 16px; }
-    .data-card h6 { font-size: 13.5px; font-weight: 700; color: var(--color-dark); margin-bottom: 10px; }
-    .data-card ul { list-style: none; padding: 0; margin: 0; }
-    .data-card ul li {
-        font-size: 13px; color: var(--color-medium);
-        padding: 4px 0;
-        display: flex; align-items: flex-start; gap: 6px;
-    }
-    .data-card ul li::before {
-        content: ''; display: inline-block;
-        width: 5px; height: 5px; border-radius: 50%;
-        background: var(--color-primary);
-        margin-top: 7px; flex-shrink: 0;
-    }
-
-    /* Purpose list */
-    .purpose-list { list-style: none; padding: 0; margin: 20px 0 0; display: flex; flex-direction: column; gap: 12px; }
-    .purpose-list li {
-        display: flex; align-items: flex-start; gap: 14px;
-        padding: 14px 18px;
-        background: var(--bg-2); border-radius: var(--radius-md);
-        border: 1px solid var(--border-color);
-        font-size: 14px; color: var(--color-medium); line-height: 1.6;
-    }
-    .purpose-list li i { color: var(--color-primary); font-size: 14px; margin-top: 2px; flex-shrink: 0; }
-
-    /* Sharing partners */
-    .partner-row { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; margin-top: 20px; }
-    .partner-card {
-        padding: 20px; border-radius: var(--radius-md);
-        border: 1px solid var(--border-color);
+    /* ── Privacy Policy ── */
+    .pp-wrap {
+        padding: 80px 0 100px;
         background: var(--bg-2);
     }
-    .partner-card h6 { font-size: 13px; font-weight: 700; color: var(--color-dark); margin-bottom: 6px; display: flex; align-items: center; gap: 8px; }
-    .partner-card h6 i { color: var(--color-primary); }
-    .partner-card p { font-size: 13px; color: var(--color-medium); margin: 0; }
 
-    /* Rights list */
-    .rights-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 20px; }
-    .right-chip {
-        display: flex; align-items: center; gap: 10px;
-        padding: 14px 16px;
-        background: var(--bg-primary-light);
-        border-radius: var(--radius-md);
-        border: 1px solid rgba(var(--color-primary-rgb),.15);
+    /* Sidebar */
+    .pp-toc {
+        position: sticky;
+        top: 100px;
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        overflow: hidden;
     }
-    .right-chip i { color: var(--color-primary); font-size: 14px; flex-shrink: 0; }
-    .right-chip span { font-size: 13.5px; font-weight: 600; color: var(--color-dark); }
-
-    /* Alert notice */
-    .policy-notice {
-        display: flex; align-items: flex-start; gap: 14px;
-        background: #fff8e7;
-        border: 1px solid #f5c842;
-        border-left: 4px solid #e59819;
-        border-radius: var(--radius-md);
-        padding: 16px 18px;
-        margin-top: 20px;
+    .pp-toc__head {
+        padding: 18px 22px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
-    .policy-notice i { color: #e59819; font-size: 16px; margin-top: 2px; flex-shrink: 0; }
-    .policy-notice p { font-size: 13.5px; color: #7a5600; margin: 0; line-height: 1.6; }
-
-    /* Info callout */
-    .policy-info-callout {
-        display: flex; align-items: flex-start; gap: 14px;
-        background: #f0f9ff;
-        border: 1px solid #bee3f8;
-        border-left: 4px solid #0d6efd;
-        border-radius: var(--radius-md);
-        padding: 16px 18px;
-        margin-top: 20px;
+    .pp-toc__head i { color: var(--color-primary); font-size: 14px; }
+    .pp-toc__head span {
+        font-family: var(--font-heading);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .06em;
+        text-transform: uppercase;
+        color: var(--color-dark);
     }
-    .policy-info-callout i { color: #0d6efd; font-size: 16px; margin-top: 2px; flex-shrink: 0; }
-    .policy-info-callout p { font-size: 13.5px; color: #1a3a5c; margin: 0; line-height: 1.6; }
-
-    /* CTA footer card */
-    .privacy-cta {
-        background: linear-gradient(135deg, var(--color-primary) 0%, #8b0030 100%);
-        border-radius: var(--radius-xl);
-        padding: 50px 40px;
-        text-align: center;
-        color: #fff;
-        margin-top: 40px;
-    }
-    .privacy-cta h4 { font-size: 24px; font-weight: 700; margin-bottom: 10px; }
-    .privacy-cta p { font-size: 15px; color: rgba(255,255,255,.85); margin-bottom: 24px; }
-    .privacy-cta a.btn-white {
-        display: inline-flex; align-items: center; gap: 8px;
-        background: #fff; color: var(--color-primary);
-        font-weight: 700; font-size: 14px;
-        padding: 14px 32px; border-radius: var(--radius-pill);
+    .pp-toc__list { list-style: none; padding: 10px 0; margin: 0; }
+    .pp-toc__list li a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 22px;
+        font-size: 13.5px;
+        color: var(--color-medium);
+        transition: color .2s, background .2s, border-color .2s;
+        border-left: 3px solid transparent;
         text-decoration: none;
-        transition: transform .2s ease, box-shadow .2s ease;
     }
-    .privacy-cta a.btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+    .pp-toc__list li a:hover,
+    .pp-toc__list li a.is-active {
+        color: var(--color-primary);
+        background: var(--bg-primary-light);
+        border-left-color: var(--color-primary);
+    }
+    .pp-toc__list li a .n {
+        flex-shrink: 0;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background: var(--bg-1);
+        font-size: 10px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-medium);
+        transition: background .2s, color .2s;
+    }
+    .pp-toc__list li a:hover .n,
+    .pp-toc__list li a.is-active .n {
+        background: var(--color-primary);
+        color: #fff;
+    }
+    .pp-toc__footer {
+        padding: 14px 22px;
+        border-top: 1px solid var(--border-color);
+        background: var(--bg-2);
+        font-size: 12.5px;
+        color: var(--color-medium);
+    }
+    .pp-toc__footer a {
+        font-weight: 600;
+        color: var(--color-primary);
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        margin-top: 6px;
+        font-size: 13px;
+    }
+
+    /* Sections */
+    .pp-section {
+        background: #fff;
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-lg);
+        padding: 36px 40px;
+        margin-bottom: 20px;
+        scroll-margin-top: 100px;
+    }
+    @media (max-width: 767.98px) {
+        .pp-section { padding: 24px 18px; }
+    }
+    .pp-section__label {
+        font-size: 11px;
+        font-weight: 700;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--color-primary);
+        margin-bottom: 6px;
+    }
+    .pp-section__title {
+        font-size: 20px;
+        font-weight: 700;
+        color: var(--color-dark);
+        margin-bottom: 20px;
+        padding-bottom: 16px;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .pp-section__title i {
+        width: 38px;
+        height: 38px;
+        flex-shrink: 0;
+        background: var(--bg-primary-light);
+        border-radius: var(--radius-sm);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--color-primary);
+        font-size: 15px;
+    }
+    .pp-section p {
+        font-size: 15px;
+        line-height: 1.85;
+        color: var(--color-medium);
+        margin-bottom: 14px;
+    }
+    .pp-section p:last-child { margin-bottom: 0; }
+
+    /* Data grid (catégories) */
+    .pp-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+    .pp-grid__item {
+        background: var(--bg-2);
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 18px;
+    }
+    .pp-grid__item h6 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-dark);
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .pp-grid__item h6 i { color: var(--color-primary); font-size: 12px; }
+    .pp-grid__item ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .pp-grid__item ul li {
+        font-size: 13px;
+        color: var(--color-medium);
+        padding: 3px 0 3px 13px;
+        position: relative;
+        line-height: 1.5;
+    }
+    .pp-grid__item ul li::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 10px;
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--color-primary);
+        opacity: .5;
+    }
+
+    /* Check list */
+    .pp-list {
+        list-style: none;
+        padding: 0;
+        margin: 16px 0 0;
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+    }
+    .pp-list li {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        font-size: 14.5px;
+        color: var(--color-medium);
+        line-height: 1.6;
+    }
+    .pp-list li i {
+        color: var(--color-primary);
+        font-size: 13px;
+        margin-top: 3px;
+        flex-shrink: 0;
+    }
+
+    /* Alerte / notice */
+    .pp-notice {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        padding: 14px 18px;
+        border-radius: var(--radius-md);
+        margin-top: 18px;
+        font-size: 13.5px;
+        line-height: 1.65;
+    }
+    .pp-notice i { font-size: 15px; margin-top: 1px; flex-shrink: 0; }
+    .pp-notice p { margin: 0; font-size: 13.5px; }
+    .pp-notice--warn {
+        background: #fffbeb;
+        border: 1px solid #fde68a;
+        border-left: 3px solid var(--color-yellow);
+    }
+    .pp-notice--warn i,
+    .pp-notice--warn p { color: #92400e; }
+    .pp-notice--info {
+        background: #eff6ff;
+        border: 1px solid #bfdbfe;
+        border-left: 3px solid var(--color-blue);
+    }
+    .pp-notice--info i,
+    .pp-notice--info p { color: #1e40af; }
+
+    /* Three column cards */
+    .pp-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+        gap: 14px;
+        margin-top: 18px;
+    }
+    .pp-cards__item {
+        border: 1px solid var(--border-color);
+        border-radius: var(--radius-md);
+        padding: 18px;
+    }
+    .pp-cards__item h6 {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--color-dark);
+        margin-bottom: 6px;
+        display: flex;
+        align-items: center;
+        gap: 7px;
+    }
+    .pp-cards__item h6 i { color: var(--color-primary); }
+    .pp-cards__item p {
+        font-size: 13px;
+        color: var(--color-medium);
+        margin: 0;
+        line-height: 1.55;
+    }
+
+    /* Rights chips */
+    .pp-rights {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 18px;
+    }
+    .pp-rights__chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 16px;
+        background: var(--bg-primary-light);
+        border: 1px solid rgba(var(--color-primary-rgb), .15);
+        border-radius: var(--radius-pill);
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--color-dark);
+    }
+    .pp-rights__chip i { color: var(--color-primary); font-size: 12px; }
+
+    /* CTA */
+    .pp-cta {
+        background: var(--color-primary);
+        border-radius: var(--radius-lg);
+        padding: 44px 40px;
+        text-align: center;
+        margin-top: 28px;
+    }
+    .pp-cta h5 { color: #fff; font-size: 22px; font-weight: 700; margin-bottom: 10px; }
+    .pp-cta p { color: rgba(255,255,255,.8); font-size: 14.5px; margin-bottom: 22px; }
+    .pp-cta a {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: #fff;
+        color: var(--color-primary);
+        font-weight: 700;
+        font-size: 14px;
+        padding: 13px 30px;
+        border-radius: var(--radius-pill);
+        transition: transform .2s, box-shadow .2s;
+        text-decoration: none;
+    }
+    .pp-cta a:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.2); color: var(--color-primary); }
+
+    /* ── Breadcrumb area ── */
+    .breadcrumb-area { min-height: 220px; display: flex; align-items: center; }
 </style>
 @endsection
 
 @section('content')
 
-{{-- ── HERO BREADCRUMB ── --}}
-<section class="privacy-hero">
-    <div class="container">
-        <nav class="breadcrumb-nav" aria-label="breadcrumb">
-            <a href="{{ route('index') }}">{{ __('Accueil') }}</a>
-            <span class="separator">/</span>
-            <span class="current">{{ __('Politique de Confidentialité') }}</span>
-        </nav>
-        <h1>{{ __('Politique de Confidentialité') }}</h1>
-        <div class="update-badge">
-            <i class="far fa-calendar-check"></i>
-            {{ __('Dernière mise à jour') }} : 28 mars 2026
-        </div>
-    </div>
-</section>
+{{-- Breadcrumb --}}
+@includeIf('frontend.partials.breadcrumb', ['breadcrumb' => $breadcrumb ?? '', 'title' => $title])
 
-{{-- ── BODY ── --}}
-<section class="privacy-body">
+{{-- Body --}}
+<div class="pp-wrap">
     <div class="container">
         <div class="row gx-xl-5">
 
-            {{-- SIDEBAR – Table des matières --}}
+            {{-- ── SIDEBAR ── --}}
             <div class="col-xl-3 col-lg-4 d-none d-lg-block" data-aos="fade-right">
-                <div class="toc-card">
-                    <div class="toc-header">
+                <div class="pp-toc">
+                    <div class="pp-toc__head">
                         <i class="far fa-list-ul"></i>
-                        <h6>{{ __('Sommaire') }}</h6>
+                        <span>{{ __('Sommaire') }}</span>
                     </div>
-                    <ul class="toc-list">
-                        <li><a href="#section-1"><span class="toc-num">1</span>{{ __('Introduction') }}</a></li>
-                        <li><a href="#section-2"><span class="toc-num">2</span>{{ __('Qui sommes-nous ?') }}</a></li>
-                        <li><a href="#section-3"><span class="toc-num">3</span>{{ __('Données collectées') }}</a></li>
-                        <li><a href="#section-4"><span class="toc-num">4</span>{{ __('Utilisation des données') }}</a></li>
-                        <li><a href="#section-5"><span class="toc-num">5</span>{{ __('Partage des données') }}</a></li>
-                        <li><a href="#section-6"><span class="toc-num">6</span>{{ __('Sécurité des données') }}</a></li>
-                        <li><a href="#section-7"><span class="toc-num">7</span>{{ __('Conservation des données') }}</a></li>
-                        <li><a href="#section-8"><span class="toc-num">8</span>{{ __('Vos droits') }}</a></li>
-                        <li><a href="#section-9"><span class="toc-num">9</span>{{ __('Cookies') }}</a></li>
-                        <li><a href="#section-10"><span class="toc-num">10</span>{{ __('Contexte africain') }}</a></li>
-                        <li><a href="#section-11"><span class="toc-num">11</span>{{ __('Protection des mineurs') }}</a></li>
-                        <li><a href="#section-12"><span class="toc-num">12</span>{{ __('Modifications') }}</a></li>
+                    <ul class="pp-toc__list">
+                        <li><a href="#s1"><span class="n">1</span>{{ __('Introduction') }}</a></li>
+                        <li><a href="#s2"><span class="n">2</span>{{ __('Qui sommes-nous ?') }}</a></li>
+                        <li><a href="#s3"><span class="n">3</span>{{ __('Données collectées') }}</a></li>
+                        <li><a href="#s4"><span class="n">4</span>{{ __('Utilisation des données') }}</a></li>
+                        <li><a href="#s5"><span class="n">5</span>{{ __('Partage des données') }}</a></li>
+                        <li><a href="#s6"><span class="n">6</span>{{ __('Sécurité') }}</a></li>
+                        <li><a href="#s7"><span class="n">7</span>{{ __('Conservation') }}</a></li>
+                        <li><a href="#s8"><span class="n">8</span>{{ __('Vos droits') }}</a></li>
+                        <li><a href="#s9"><span class="n">9</span>{{ __('Cookies') }}</a></li>
+                        <li><a href="#s10"><span class="n">10</span>{{ __('Contexte africain') }}</a></li>
+                        <li><a href="#s11"><span class="n">11</span>{{ __('Mineurs') }}</a></li>
+                        <li><a href="#s12"><span class="n">12</span>{{ __('Modifications') }}</a></li>
                     </ul>
-                    <div class="toc-contact-strip">
-                        <p>{{ __('Une question sur vos données ?') }}</p>
-                        <a href="{{ route('contact') }}">
-                            <i class="far fa-envelope"></i>
-                            {{ __('Nous contacter') }}
-                        </a>
+                    <div class="pp-toc__footer">
+                        {{ __('Une question ?') }}
+                        <br>
+                        <a href="{{ route('contact') }}"><i class="far fa-envelope"></i>{{ __('Nous contacter') }}</a>
                     </div>
                 </div>
             </div>
 
-            {{-- MAIN CONTENT --}}
+            {{-- ── CONTENT ── --}}
             <div class="col-xl-9 col-lg-8" data-aos="fade-up">
 
-                {{-- Section 1 – Introduction --}}
-                <div class="policy-section" id="section-1">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-shield-alt"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 01</span>
-                            <h3>{{ __('Introduction') }}</h3>
-                        </div>
+                {{-- 1 – Introduction --}}
+                <div class="pp-section" id="s1">
+                    <div class="pp-section__label">{{ __('Article') }} 01</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-shield-alt"></i>
+                        {{ __('Introduction') }}
                     </div>
                     <p>{{ __('Chez SPACEHUB, la protection de vos données personnelles constitue une priorité fondamentale. Nous nous engageons à garantir la sécurité, la confidentialité et la transparence dans le traitement de toutes vos informations.') }}</p>
-                    <p>{{ __('La présente Politique de Confidentialité a pour objet de vous informer de manière claire et complète sur les points suivants :') }}</p>
-                    <div class="purpose-list" style="margin-top: 16px;">
-                        <div style="display:flex;align-items:flex-start;gap:14px;padding:12px 18px;background:var(--bg-2);border-radius:var(--radius-md);border:1px solid var(--border-color);">
-                            <i class="far fa-check-circle" style="color:var(--color-primary);margin-top:3px;flex-shrink:0;"></i>
-                            <span style="font-size:14px;color:var(--color-medium);">{{ __('Les données que nous collectons et les modalités de leur collecte') }}</span>
-                        </div>
-                        <div style="display:flex;align-items:flex-start;gap:14px;padding:12px 18px;background:var(--bg-2);border-radius:var(--radius-md);border:1px solid var(--border-color);">
-                            <i class="far fa-check-circle" style="color:var(--color-primary);margin-top:3px;flex-shrink:0;"></i>
-                            <span style="font-size:14px;color:var(--color-medium);">{{ __('Les finalités pour lesquelles ces données sont utilisées') }}</span>
-                        </div>
-                        <div style="display:flex;align-items:flex-start;gap:14px;padding:12px 18px;background:var(--bg-2);border-radius:var(--radius-md);border:1px solid var(--border-color);">
-                            <i class="far fa-check-circle" style="color:var(--color-primary);margin-top:3px;flex-shrink:0;"></i>
-                            <span style="font-size:14px;color:var(--color-medium);">{{ __('Les mesures mises en place pour assurer leur protection') }}</span>
-                        </div>
-                        <div style="display:flex;align-items:flex-start;gap:14px;padding:12px 18px;background:var(--bg-2);border-radius:var(--radius-md);border:1px solid var(--border-color);">
-                            <i class="far fa-check-circle" style="color:var(--color-primary);margin-top:3px;flex-shrink:0;"></i>
-                            <span style="font-size:14px;color:var(--color-medium);">{{ __('Vos droits en tant qu\'utilisateur et les moyens de les exercer') }}</span>
-                        </div>
-                    </div>
-                    <div class="policy-info-callout">
+                    <p>{{ __('La présente Politique de Confidentialité vous informe clairement sur les données que nous collectons, la manière dont nous les utilisons, les mesures que nous prenons pour les protéger et les droits dont vous disposez en tant qu\'utilisateur.') }}</p>
+                    <div class="pp-notice pp-notice--info">
                         <i class="far fa-info-circle"></i>
-                        <p>{{ __('En accédant à notre plateforme et en utilisant nos services, vous reconnaissez avoir pris connaissance de la présente politique et acceptez les pratiques qui y sont décrites.') }}</p>
+                        <p>{{ __('En accédant à notre plateforme et en utilisant nos services, vous reconnaissez avoir pris connaissance de cette politique et acceptez les pratiques qui y sont décrites.') }}</p>
                     </div>
                 </div>
 
-                {{-- Section 2 – Qui sommes-nous --}}
-                <div class="policy-section" id="section-2">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-building"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 02</span>
-                            <h3>{{ __('Qui sommes-nous ?') }}</h3>
-                        </div>
+                {{-- 2 – Qui sommes-nous --}}
+                <div class="pp-section" id="s2">
+                    <div class="pp-section__label">{{ __('Article') }} 02</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-building"></i>
+                        {{ __('Qui sommes-nous ?') }}
                     </div>
-                    <p>{{ __('SPACEHUB est une plateforme digitale innovante dédiée à la mise en relation entre propriétaires d\'espaces et utilisateurs à la recherche de lieux adaptés à leurs besoins.') }}</p>
-                    <div class="partner-row" style="margin-top: 20px;">
-                        <div class="partner-card">
+                    <p>{{ __('SPACEHUB est une plateforme digitale dédiée à la mise en relation entre propriétaires d\'espaces et utilisateurs à la recherche de lieux adaptés à leurs besoins.') }}</p>
+                    <div class="pp-cards">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-map-marker-alt"></i>{{ __('Réservation d\'espaces') }}</h6>
-                            <p>{{ __('Bureaux, salles de réunion, studios, espaces événementiels et bien plus.') }}</p>
+                            <p>{{ __('Bureaux, salles de réunion, studios, espaces événementiels et plus encore.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-handshake"></i>{{ __('Mise en relation') }}</h6>
-                            <p>{{ __('Connexion directe entre propriétaires et utilisateurs finaux.') }}</p>
+                            <p>{{ __('Connexion directe entre propriétaires d\'espaces et utilisateurs finaux.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-concierge-bell"></i>{{ __('Services associés') }}</h6>
                             <p>{{ __('Gestion des services et prestations liés à chaque espace réservé.') }}</p>
                         </div>
                     </div>
                 </div>
 
-                {{-- Section 3 – Données collectées --}}
-                <div class="policy-section" id="section-3">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-database"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 03</span>
-                            <h3>{{ __('Données collectées') }}</h3>
-                        </div>
+                {{-- 3 – Données collectées --}}
+                <div class="pp-section" id="s3">
+                    <div class="pp-section__label">{{ __('Article') }} 03</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-database"></i>
+                        {{ __('Données collectées') }}
                     </div>
-                    <p>{{ __('Dans le cadre de la fourniture de nos services, nous sommes amenés à collecter différentes catégories de données selon votre profil et vos interactions avec la plateforme.') }}</p>
-                    <div class="data-grid">
-                        <div class="data-card">
-                            <div class="data-card-icon"><i class="far fa-user"></i></div>
-                            <h6>{{ __('Données personnelles') }}</h6>
+                    <p>{{ __('Nous collectons différentes catégories de données selon votre profil et vos interactions avec la plateforme.') }}</p>
+                    <div class="pp-grid">
+                        <div class="pp-grid__item">
+                            <h6><i class="far fa-user"></i>{{ __('Données personnelles') }}</h6>
                             <ul>
                                 <li>{{ __('Nom et prénom') }}</li>
                                 <li>{{ __('Numéro de téléphone') }}</li>
@@ -405,28 +422,25 @@
                                 <li>{{ __('Photo de profil (optionnelle)') }}</li>
                             </ul>
                         </div>
-                        <div class="data-card">
-                            <div class="data-card-icon"><i class="far fa-briefcase"></i></div>
-                            <h6>{{ __('Données professionnelles') }}</h6>
+                        <div class="pp-grid__item">
+                            <h6><i class="far fa-briefcase"></i>{{ __('Données professionnelles') }}</h6>
                             <ul>
                                 <li>{{ __('Nom de l\'entreprise') }}</li>
                                 <li>{{ __('Adresse de l\'espace') }}</li>
                                 <li>{{ __('Informations de facturation') }}</li>
-                                <li>{{ __('N° d\'identification (si applicable)') }}</li>
+                                <li>{{ __('N° d\'identification') }}</li>
                             </ul>
                         </div>
-                        <div class="data-card">
-                            <div class="data-card-icon"><i class="far fa-calendar-check"></i></div>
-                            <h6>{{ __('Données de réservation') }}</h6>
+                        <div class="pp-grid__item">
+                            <h6><i class="far fa-calendar-check"></i>{{ __('Données de réservation') }}</h6>
                             <ul>
                                 <li>{{ __('Détails des réservations') }}</li>
                                 <li>{{ __('Historique des transactions') }}</li>
                                 <li>{{ __('Préférences utilisateur') }}</li>
                             </ul>
                         </div>
-                        <div class="data-card">
-                            <div class="data-card-icon"><i class="far fa-laptop"></i></div>
-                            <h6>{{ __('Données techniques') }}</h6>
+                        <div class="pp-grid__item">
+                            <h6><i class="far fa-laptop"></i>{{ __('Données techniques') }}</h6>
                             <ul>
                                 <li>{{ __('Adresse IP') }}</li>
                                 <li>{{ __('Type d\'appareil') }}</li>
@@ -434,239 +448,218 @@
                                 <li>{{ __('Données de navigation') }}</li>
                             </ul>
                         </div>
-                        <div class="data-card">
-                            <div class="data-card-icon"><i class="far fa-credit-card"></i></div>
-                            <h6>{{ __('Données de paiement') }}</h6>
+                        <div class="pp-grid__item">
+                            <h6><i class="far fa-credit-card"></i>{{ __('Données de paiement') }}</h6>
                             <ul>
-                                <li>{{ __('Informations liées aux transactions') }}</li>
+                                <li>{{ __('Données de transaction') }}</li>
                                 <li>{{ __('Mobile Money') }}</li>
-                                <li>{{ __('Cartes bancaires (partiel)') }}</li>
+                                <li>{{ __('Cartes (données partielles)') }}</li>
                             </ul>
                         </div>
                     </div>
-                    <div class="policy-notice">
+                    <div class="pp-notice pp-notice--warn">
                         <i class="far fa-exclamation-triangle"></i>
                         <p>{{ __('Nous ne stockons jamais vos données bancaires complètes. Les informations sensibles de paiement sont traitées par des prestataires certifiés et sécurisés.') }}</p>
                     </div>
                 </div>
 
-                {{-- Section 4 – Utilisation --}}
-                <div class="policy-section" id="section-4">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-cogs"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 04</span>
-                            <h3>{{ __('Utilisation des données') }}</h3>
-                        </div>
+                {{-- 4 – Utilisation --}}
+                <div class="pp-section" id="s4">
+                    <div class="pp-section__label">{{ __('Article') }} 04</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-cogs"></i>
+                        {{ __('Utilisation des données') }}
                     </div>
-                    <p>{{ __('Les données collectées sont utilisées exclusivement dans le cadre des finalités suivantes, en adéquation avec les services que vous sollicitez :') }}</p>
-                    <ul class="purpose-list">
-                        <li><i class="far fa-check"></i>{{ __('Fournir nos services et assurer leur amélioration continue') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Gérer, confirmer et suivre vos réservations') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Faciliter et sécuriser les transactions de paiement') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Assurer la sécurité et l\'intégrité de la plateforme') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Communiquer avec vous par SMS, WhatsApp ou e-mail') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Personnaliser votre expérience sur la plateforme') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Respecter nos obligations légales et réglementaires') }}</li>
+                    <p>{{ __('Vos données sont utilisées exclusivement dans le cadre des finalités suivantes :') }}</p>
+                    <ul class="pp-list">
+                        <li><i class="far fa-check-circle"></i>{{ __('Fournir nos services et assurer leur amélioration continue') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Gérer, confirmer et suivre vos réservations') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Faciliter et sécuriser les transactions de paiement') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Assurer la sécurité et l\'intégrité de la plateforme') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Communiquer avec vous par SMS, WhatsApp ou e-mail') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Personnaliser votre expérience sur la plateforme') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Respecter nos obligations légales et réglementaires') }}</li>
                     </ul>
                 </div>
 
-                {{-- Section 5 – Partage --}}
-                <div class="policy-section" id="section-5">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-share-alt"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 05</span>
-                            <h3>{{ __('Partage des données') }}</h3>
-                        </div>
+                {{-- 5 – Partage --}}
+                <div class="pp-section" id="s5">
+                    <div class="pp-section__label">{{ __('Article') }} 05</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-share-alt"></i>
+                        {{ __('Partage des données') }}
                     </div>
-                    <p>{{ __('SPACEHUB ne vend, ne loue ni ne cède vos données personnelles à des tiers à des fins commerciales. Cependant, le bon fonctionnement de la plateforme implique de partager certaines informations avec des partenaires de confiance.') }}</p>
-                    <div class="partner-row">
-                        <div class="partner-card">
+                    <p>{{ __('SPACEHUB ne vend, ne loue ni ne cède vos données personnelles à des tiers à des fins commerciales. Certaines informations peuvent néanmoins être partagées avec des partenaires de confiance, strictement nécessaires au bon fonctionnement de la plateforme.') }}</p>
+                    <div class="pp-cards">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-server"></i>{{ __('Partenaires techniques') }}</h6>
-                            <p>{{ __('Services de paiement (API Mobile Money), hébergeurs et fournisseurs d\'infrastructure cloud.') }}</p>
+                            <p>{{ __('Services de paiement (Mobile Money, APIs), hébergeurs et infrastructure cloud.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-headset"></i>{{ __('Prestataires de services') }}</h6>
-                            <p>{{ __('Outils de support client, solutions d\'envoi de SMS et d\'e-mails transactionnels.') }}</p>
+                            <p>{{ __('Support client, outils d\'envoi de SMS et d\'e-mails transactionnels.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-balance-scale"></i>{{ __('Autorités compétentes') }}</h6>
-                            <p>{{ __('En cas d\'obligation légale, judiciaire ou réglementaire dûment établie.') }}</p>
+                            <p>{{ __('Uniquement en cas d\'obligation légale, judiciaire ou réglementaire.') }}</p>
                         </div>
                     </div>
                 </div>
 
-                {{-- Section 6 – Sécurité --}}
-                <div class="policy-section" id="section-6">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-lock"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 06</span>
-                            <h3>{{ __('Sécurité des données') }}</h3>
-                        </div>
+                {{-- 6 – Sécurité --}}
+                <div class="pp-section" id="s6">
+                    <div class="pp-section__label">{{ __('Article') }} 06</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-lock"></i>
+                        {{ __('Sécurité des données') }}
                     </div>
                     <p>{{ __('Nous mettons en œuvre des mesures techniques et organisationnelles rigoureuses pour protéger vos données contre tout accès non autorisé, perte, altération ou divulgation.') }}</p>
-                    <div class="rights-grid" style="margin-top: 20px;">
-                        <div class="right-chip"><i class="far fa-lock"></i><span>{{ __('Chiffrement des données sensibles') }}</span></div>
-                        <div class="right-chip"><i class="far fa-key"></i><span>{{ __('Accès sécurisé aux comptes') }}</span></div>
-                        <div class="right-chip"><i class="far fa-eye"></i><span>{{ __('Surveillance des activités suspectes') }}</span></div>
-                        <div class="right-chip"><i class="far fa-server"></i><span>{{ __('Hébergement sur serveurs sécurisés') }}</span></div>
-                    </div>
-                    <div class="policy-notice">
+                    <ul class="pp-list">
+                        <li><i class="far fa-lock"></i>{{ __('Chiffrement des données sensibles') }}</li>
+                        <li><i class="far fa-key"></i>{{ __('Accès sécurisé aux comptes utilisateurs') }}</li>
+                        <li><i class="far fa-eye"></i>{{ __('Surveillance continue des activités suspectes') }}</li>
+                        <li><i class="far fa-server"></i>{{ __('Hébergement sur serveurs certifiés et sécurisés') }}</li>
+                    </ul>
+                    <div class="pp-notice pp-notice--warn">
                         <i class="far fa-exclamation-triangle"></i>
-                        <p>{{ __('Malgré la rigueur de nos pratiques de sécurité, aucun système d\'information n\'est infaillible. Nous vous recommandons de protéger votre compte avec un mot de passe robuste et de ne jamais le partager.') }}</p>
+                        <p>{{ __('Malgré la rigueur de nos pratiques, aucun système d\'information n\'est infaillible. Nous vous recommandons de protéger votre compte avec un mot de passe robuste et de ne jamais le partager.') }}</p>
                     </div>
                 </div>
 
-                {{-- Section 7 – Conservation --}}
-                <div class="policy-section" id="section-7">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-archive"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 07</span>
-                            <h3>{{ __('Conservation des données') }}</h3>
-                        </div>
+                {{-- 7 – Conservation --}}
+                <div class="pp-section" id="s7">
+                    <div class="pp-section__label">{{ __('Article') }} 07</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-clock"></i>
+                        {{ __('Conservation des données') }}
                     </div>
-                    <p>{{ __('Nous conservons vos données personnelles uniquement pour la durée nécessaire à l\'accomplissement des finalités pour lesquelles elles ont été collectées, selon les critères suivants :') }}</p>
-                    <ul class="purpose-list">
-                        <li><i class="far fa-clock"></i>{{ __('Tant que votre compte est actif et nécessaire pour la fourniture de nos services') }}</li>
-                        <li><i class="far fa-clock"></i>{{ __('Pour satisfaire nos obligations légales, fiscales et comptables') }}</li>
-                        <li><i class="far fa-clock"></i>{{ __('Jusqu\'à la suppression de votre compte, sur demande expresse de votre part') }}</li>
+                    <p>{{ __('Vos données personnelles sont conservées uniquement pour la durée nécessaire à l\'accomplissement des finalités pour lesquelles elles ont été collectées.') }}</p>
+                    <ul class="pp-list">
+                        <li><i class="far fa-check-circle"></i>{{ __('Tant que votre compte est actif et nécessaire à la fourniture de nos services') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Pour satisfaire nos obligations légales, fiscales et comptables') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Jusqu\'à la suppression de votre compte, sur demande expresse') }}</li>
                     </ul>
                 </div>
 
-                {{-- Section 8 – Vos droits --}}
-                <div class="policy-section" id="section-8">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-user-shield"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 08</span>
-                            <h3>{{ __('Vos droits') }}</h3>
-                        </div>
+                {{-- 8 – Vos droits --}}
+                <div class="pp-section" id="s8">
+                    <div class="pp-section__label">{{ __('Article') }} 08</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-user-shield"></i>
+                        {{ __('Vos droits') }}
                     </div>
-                    <p>{{ __('Conformément aux bonnes pratiques internationales en matière de protection des données, vous disposez des droits suivants concernant vos informations personnelles :') }}</p>
-                    <div class="rights-grid">
-                        <div class="right-chip"><i class="far fa-eye"></i><span>{{ __('Droit d\'accès à vos données') }}</span></div>
-                        <div class="right-chip"><i class="far fa-edit"></i><span>{{ __('Droit de rectification') }}</span></div>
-                        <div class="right-chip"><i class="far fa-trash-alt"></i><span>{{ __('Droit à l\'effacement') }}</span></div>
-                        <div class="right-chip"><i class="far fa-ban"></i><span>{{ __('Droit d\'opposition') }}</span></div>
-                        <div class="right-chip"><i class="far fa-undo"></i><span>{{ __('Retrait du consentement') }}</span></div>
-                        <div class="right-chip"><i class="far fa-download"></i><span>{{ __('Portabilité des données') }}</span></div>
+                    <p>{{ __('Conformément aux bonnes pratiques internationales en matière de protection des données, vous disposez des droits suivants :') }}</p>
+                    <div class="pp-rights">
+                        <div class="pp-rights__chip"><i class="far fa-eye"></i>{{ __('Droit d\'accès') }}</div>
+                        <div class="pp-rights__chip"><i class="far fa-edit"></i>{{ __('Droit de rectification') }}</div>
+                        <div class="pp-rights__chip"><i class="far fa-trash-alt"></i>{{ __('Droit à l\'effacement') }}</div>
+                        <div class="pp-rights__chip"><i class="far fa-ban"></i>{{ __('Droit d\'opposition') }}</div>
+                        <div class="pp-rights__chip"><i class="far fa-undo"></i>{{ __('Retrait du consentement') }}</div>
+                        <div class="pp-rights__chip"><i class="far fa-download"></i>{{ __('Portabilité des données') }}</div>
                     </div>
-                    <div class="policy-info-callout">
+                    <div class="pp-notice pp-notice--info">
                         <i class="far fa-info-circle"></i>
-                        <p>{{ __('Pour exercer l\'un de vos droits, contactez-nous directement via le formulaire de contact disponible sur la plateforme. Nous nous engageons à répondre à votre demande dans les meilleurs délais.') }}</p>
+                        <p>{{ __('Pour exercer l\'un de vos droits, contactez-nous via le formulaire disponible sur la plateforme. Nous nous engageons à répondre dans les meilleurs délais.') }}</p>
                     </div>
                 </div>
 
-                {{-- Section 9 – Cookies --}}
-                <div class="policy-section" id="section-9">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-cookie-bite"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 09</span>
-                            <h3>{{ __('Cookies et technologies similaires') }}</h3>
-                        </div>
+                {{-- 9 – Cookies --}}
+                <div class="pp-section" id="s9">
+                    <div class="pp-section__label">{{ __('Article') }} 09</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-cookie-bite"></i>
+                        {{ __('Cookies et technologies similaires') }}
                     </div>
-                    <p>{{ __('SPACEHUB utilise des cookies et des technologies de suivi similaires afin d\'améliorer votre expérience de navigation et d\'optimiser nos services.') }}</p>
-                    <ul class="purpose-list">
-                        <li><i class="far fa-check"></i>{{ __('Amélioration de la navigation et de la fluidité de l\'interface') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Analyse statistique de l\'utilisation de la plateforme') }}</li>
-                        <li><i class="far fa-check"></i>{{ __('Personnalisation du contenu affiché selon vos préférences') }}</li>
+                    <p>{{ __('SPACEHUB utilise des cookies afin d\'améliorer votre expérience de navigation et d\'optimiser nos services.') }}</p>
+                    <ul class="pp-list">
+                        <li><i class="far fa-check-circle"></i>{{ __('Amélioration de la navigation et de la fluidité de l\'interface') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Analyse statistique de l\'utilisation de la plateforme') }}</li>
+                        <li><i class="far fa-check-circle"></i>{{ __('Personnalisation du contenu selon vos préférences') }}</li>
                     </ul>
-                    <p style="margin-top: 16px;">{{ __('Vous avez la possibilité de paramétrer votre navigateur afin de refuser tout ou partie des cookies. Cette action peut toutefois affecter certaines fonctionnalités de la plateforme.') }}</p>
+                    <p class="mt-15">{{ __('Vous pouvez paramétrer votre navigateur pour refuser tout ou partie des cookies. Cela peut toutefois affecter certaines fonctionnalités.') }}</p>
                 </div>
 
-                {{-- Section 10 – Contexte africain --}}
-                <div class="policy-section" id="section-10">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-globe-africa"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 10</span>
-                            <h3>{{ __('Spécificités du marché africain') }}</h3>
-                        </div>
+                {{-- 10 – Contexte africain --}}
+                <div class="pp-section" id="s10">
+                    <div class="pp-section__label">{{ __('Article') }} 10</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-globe-africa"></i>
+                        {{ __('Spécificités du marché africain') }}
                     </div>
-                    <p>{{ __('SPACEHUB est conçu pour répondre aux réalités économiques et technologiques du marché africain, et en particulier de la République Démocratique du Congo. Notre approche intègre ces spécificités à tous les niveaux.') }}</p>
-                    <div class="partner-row">
-                        <div class="partner-card">
+                    <p>{{ __('SPACEHUB est conçu pour répondre aux réalités économiques et technologiques du marché africain, notamment en République Démocratique du Congo.') }}</p>
+                    <div class="pp-cards">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-mobile-alt"></i>{{ __('Paiements locaux') }}</h6>
                             <p>{{ __('Intégration de solutions Mobile Money adaptées aux habitudes de paiement locales.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-store"></i>{{ __('Économie informelle') }}</h6>
                             <p>{{ __('Collecte de données adaptée à la réalité du marché, sans exigences administratives excessives.') }}</p>
                         </div>
-                        <div class="partner-card">
+                        <div class="pp-cards__item">
                             <h6><i class="far fa-users"></i>{{ __('Inclusion numérique') }}</h6>
-                            <p>{{ __('Limitation des prérequis pour favoriser l\'accès au plus grand nombre d\'utilisateurs.') }}</p>
+                            <p>{{ __('Prérequis limités pour favoriser l\'accès au plus grand nombre d\'utilisateurs.') }}</p>
                         </div>
                     </div>
                 </div>
 
-                {{-- Section 11 – Mineurs --}}
-                <div class="policy-section" id="section-11">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-child"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 11</span>
-                            <h3>{{ __('Protection des mineurs') }}</h3>
-                        </div>
+                {{-- 11 – Mineurs --}}
+                <div class="pp-section" id="s11">
+                    <div class="pp-section__label">{{ __('Article') }} 11</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-child"></i>
+                        {{ __('Protection des mineurs') }}
                     </div>
-                    <p>{{ __('Les services proposés par SPACEHUB sont exclusivement destinés aux personnes âgées de 18 ans et plus. Nous ne collectons pas sciemment de données personnelles concernant des mineurs.') }}</p>
-                    <p>{{ __('Si vous êtes parent ou tuteur légal et que vous avez connaissance qu\'un mineur sous votre responsabilité nous a communiqué des données personnelles, nous vous invitons à nous contacter afin que nous puissions procéder à leur suppression dans les meilleurs délais.') }}</p>
+                    <p>{{ __('Les services de SPACEHUB sont exclusivement destinés aux personnes âgées de 18 ans et plus. Nous ne collectons pas sciemment de données concernant des mineurs.') }}</p>
+                    <p>{{ __('Si vous êtes parent ou tuteur légal et constatez qu\'un mineur nous a communiqué ses données, contactez-nous afin que nous procédions à leur suppression dans les meilleurs délais.') }}</p>
                 </div>
 
-                {{-- Section 12 – Modifications --}}
-                <div class="policy-section" id="section-12">
-                    <div class="section-icon-title">
-                        <div class="section-badge"><i class="far fa-sync-alt"></i></div>
-                        <div class="section-title-block">
-                            <span class="section-number">{{ __('Article') }} 12</span>
-                            <h3>{{ __('Modifications de la politique') }}</h3>
-                        </div>
+                {{-- 12 – Modifications --}}
+                <div class="pp-section" id="s12">
+                    <div class="pp-section__label">{{ __('Article') }} 12</div>
+                    <div class="pp-section__title">
+                        <i class="far fa-sync-alt"></i>
+                        {{ __('Modifications de la politique') }}
                     </div>
-                    <p>{{ __('SPACEHUB se réserve le droit de mettre à jour la présente Politique de Confidentialité à tout moment, notamment pour s\'adapter aux évolutions légales, technologiques ou opérationnelles.') }}</p>
-                    <p>{{ __('Toute modification substantielle vous sera notifiée par les canaux de communication habituels (e-mail, notification in-app). La date de dernière mise à jour figurant en tête de ce document fait foi.') }}</p>
-                    <p>{{ __('Nous vous encourageons à consulter régulièrement cette page afin de rester informé des éventuelles évolutions de nos pratiques.') }}</p>
+                    <p>{{ __('SPACEHUB se réserve le droit de mettre à jour la présente Politique de Confidentialité à tout moment, notamment pour s\'adapter aux évolutions légales ou opérationnelles.') }}</p>
+                    <p>{{ __('Toute modification substantielle vous sera notifiée via nos canaux de communication habituels. La date de dernière mise à jour figurant en tête de ce document fait foi.') }}</p>
                 </div>
 
-                {{-- CTA Contact --}}
-                <div class="privacy-cta">
-                    <h4>{{ __('Une question sur vos données personnelles ?') }}</h4>
-                    <p>{{ __('Notre équipe est disponible pour répondre à toutes vos questions relatives à la confidentialité et à la gestion de vos informations.') }}</p>
-                    <a href="{{ route('contact') }}" class="btn-white">
+                {{-- CTA --}}
+                <div class="pp-cta">
+                    <h5>{{ __('Une question sur vos données personnelles ?') }}</h5>
+                    <p>{{ __('Notre équipe est disponible pour répondre à toutes vos questions sur la confidentialité et la gestion de vos informations.') }}</p>
+                    <a href="{{ route('contact') }}">
                         <i class="far fa-envelope"></i>
                         {{ __('Contacter notre équipe') }}
                     </a>
                 </div>
 
-            </div>{{-- /col main --}}
+            </div>{{-- /col --}}
         </div>{{-- /row --}}
     </div>{{-- /container --}}
-</section>
+</div>
 
 @endsection
 
 @section('script')
 <script>
-    // Active TOC link on scroll
-    (function () {
-        var sections = document.querySelectorAll('.policy-section[id]');
-        var tocLinks = document.querySelectorAll('.toc-list li a');
-        if (!sections.length || !tocLinks.length) return;
+(function () {
+    var sections = document.querySelectorAll('.pp-section[id]');
+    var links    = document.querySelectorAll('.pp-toc__list a');
+    if (!sections.length || !links.length) return;
 
-        var observer = new IntersectionObserver(function (entries) {
-            entries.forEach(function (entry) {
-                if (entry.isIntersecting) {
-                    tocLinks.forEach(function (link) { link.classList.remove('active'); });
-                    var active = document.querySelector('.toc-list li a[href="#' + entry.target.id + '"]');
-                    if (active) active.classList.add('active');
-                }
-            });
-        }, { rootMargin: '-30% 0px -60% 0px' });
+    var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+            if (e.isIntersecting) {
+                links.forEach(function (l) { l.classList.remove('is-active'); });
+                var a = document.querySelector('.pp-toc__list a[href="#' + e.target.id + '"]');
+                if (a) a.classList.add('is-active');
+            }
+        });
+    }, { rootMargin: '-20% 0px -70% 0px' });
 
-        sections.forEach(function (sec) { observer.observe(sec); });
-    })();
+    sections.forEach(function (s) { io.observe(s); });
+})();
 </script>
 @endsection
